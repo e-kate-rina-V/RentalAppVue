@@ -103,7 +103,7 @@ export default {
 
     const submitRegistrationForm = async () => {
       try {
-        await api.post('/api/users/register', formData.value);
+        await api.post('/users/register', formData.value);
         alert('Пользователь успешно зарегистрирован');
         closeModal();
       } catch (error) {
