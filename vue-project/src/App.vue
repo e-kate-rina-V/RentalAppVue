@@ -10,9 +10,9 @@ import MainRenter from './components/MainRenter.vue';
   </header>
 
   <main>
-    <!-- <Home /> -->
+    <Home />
     <!-- <MainLandlord /> -->
-    <MainRenter />
+    <!-- <MainRenter /> -->
   </main>
 </template>
 

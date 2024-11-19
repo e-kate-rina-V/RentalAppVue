@@ -20,9 +20,8 @@
 
         <main id="main-body">
             <h1> Бронюйте житло легко !</h1>
-            <br><br>
 
-            <div id="carouselExample" class="carousel slide">
+            <!-- <div id="carouselExample" class="carousel slide">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img id="carousel-img" src="../assets/img/rose.PNG" class="d-block w-100" alt="...">
@@ -44,7 +43,7 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
-            </div>
+            </div> -->
 
 
             <p id="conv"> Зручності для гостей</p>
@@ -134,7 +133,6 @@ export default {
 </script>
 
 <style>
-
 #carouselExample {
     width: 40%;
 }
@@ -150,6 +148,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
+    height: 15%;
     background-color: #f1f584;
     padding-top: 2%;
     padding-left: 5%;
@@ -158,6 +157,7 @@ header {
     align-items: center;
     justify-content: center;
     z-index: 1;
+    color: black;
 }
 
 #main-name {
@@ -196,7 +196,7 @@ header {
     width: 100%;
     display: grid;
     justify-content: center;
-    margin-top: 5%;
+    margin-top: 1%;
 }
 
 main {
@@ -233,14 +233,14 @@ main {
 #conv {
     position: absolute;
     margin-left: 3%;
-    margin-top: 25%;
+    margin-top: 15%;
 }
 
 #conven {
     gap: 3%;
     position: absolute;
     margin-left: 3%;
-    margin-top: 30%;
+    margin-top: 20%;
 }
 
 footer {

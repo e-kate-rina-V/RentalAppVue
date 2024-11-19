@@ -1,11 +1,17 @@
 import axios from 'axios';
 
-// Функция для получения CSRF токена
+const api = axios.create({
+    baseURL: 'http://localhost:8080/',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
 async function getCsrfToken() {
     try {
-        const response = await axios.get('http://localhost:8080/api/csrf-token'); // запрос на сервер
+        const response = await axios.get('/api/csrf-token');
         const csrfToken = response.data.csrf_token;
-        localStorage.setItem('csrf_token', csrfToken);  // Сохраняем токен в localStorage
+        localStorage.setItem('csrf_token', csrfToken);
         return csrfToken;
     } catch (error) {
         console.error('Ошибка при получении CSRF токена:', error);
@@ -13,38 +19,43 @@ async function getCsrfToken() {
     }
 }
 
-// Создаем axios инстанс
-const api = axios.create({
-    baseURL: 'http://localhost:8080/',
-    headers: {
-        'Content-Type': 'application/json',
-    }
-});
+api.interceptors.request.use(
+    async (config) => {
+        let csrfToken = localStorage.getItem('csrf_token');
 
-// Используем CSRF токен для отправки формы
-async function submitForm(formData) {
-    let csrfToken = localStorage.getItem('csrf_token'); // Сначала пытаемся получить токен из localStorage
-
-    // Если токен не найден, получаем его
-    if (!csrfToken) {
-        csrfToken = await getCsrfToken();
-    }
-
-    if (csrfToken) {
-        try {
-            await api.post('/users/store', formData, {
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken, // Отправка CSRF токена в заголовке
-                }
-            });
-            alert('Пользователь успешно создан');
-        } catch (error) {
-            alert('Ошибка при создании пользователя');
-            console.error(error);
+        if (!csrfToken) {
+            csrfToken = await getCsrfToken();
         }
-    } else {
-        alert('Не удалось получить CSRF токен');
+
+        if (csrfToken) {
+            config.headers['X-CSRF-TOKEN'] = csrfToken;
+        }
+
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response) {
+            if (error.response.status === 422) {
+                const errors = error.response.data.errors;
+                Object.keys(errors).forEach((field) => {
+                    const messages = errors[field].join(', ');
+                    alert(`Ошибка в поле ${field}: ${messages}`);
+                });
+            } else if (error.response.status === 401) {
+                alert('Неавторизованный доступ. Выполните вход.');
+            } else {
+                alert(`Ошибка: ${error.response.status}`);
+            }
+        } else {
+            alert('Ошибка соединения с сервером.');
+        }
+        return Promise.reject(error);
     }
-}
+);
 
 export default api;
