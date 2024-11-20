@@ -14,7 +14,7 @@ async function getCsrfToken() {
         localStorage.setItem('csrf_token', csrfToken);
         return csrfToken;
     } catch (error) {
-        console.error('Ошибка при получении CSRF токена:', error);
+        console.error('Error getting CSRF token:', error);
         return null;
     }
 }
@@ -44,15 +44,15 @@ api.interceptors.response.use(
                 const errors = error.response.data.errors;
                 Object.keys(errors).forEach((field) => {
                     const messages = errors[field].join(', ');
-                    alert(`Ошибка в поле ${field}: ${messages}`);
+                    alert(`Error in ${field}: ${messages}`);
                 });
             } else if (error.response.status === 401) {
-                alert('Неавторизованный доступ. Выполните вход.');
+                alert('Unauthorized access. Please sign in.');
             } else {
-                alert(`Ошибка: ${error.response.status}`);
+                alert(`Error: ${error.response.status}`);
             }
         } else {
-            alert('Ошибка соединения с сервером.');
+            alert('Error connecting to server.');
         }
         return Promise.reject(error);
     }
