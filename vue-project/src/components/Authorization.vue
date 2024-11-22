@@ -6,8 +6,14 @@
           <div id="choice-form">
             <h2>Оберіть роль</h2>
             <div class="btn-gr" role="group">
-              <button class="btn btn-dark" type="button" @click="selectRole('renter')">Орендатор</button>
-              <button class="btn btn-dark" type="button" @click="selectRole('landlord')">Орендодавець</button>
+              <div class="role-btn">
+                <img class="conven-img" src="../assets/img/renter_icon.png" alt="renter_icon">
+                <button class="btn btn-dark" type="button" @click="selectRole('renter')">Орендатор</button>
+              </div>
+              <div class="role-btn">
+                <img class="conven-img" src="../assets/img/landlord_icon.png" alt="landlord_icon">
+                <button class="btn btn-dark" type="button" @click="selectRole('landlord')">Орендодавець</button>
+              </div>
             </div>
             <p @click="switchMode" class="switch-mode">I already have an account</p>
           </div>
@@ -72,6 +78,7 @@
 import { ref } from 'vue';
 import api from '../api/api.js';
 import { validateName, validateEmail, validatePassword } from '../validation/validation.js';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'Authorization',
@@ -80,6 +87,7 @@ export default {
   },
   emits: ['close-modal'],
   setup(props, { emit }) {
+    const router = useRouter();
     const showForm = ref(false);
     const isLoginMode = ref(false);
     const role = ref('');
@@ -177,7 +185,21 @@ export default {
 
       try {
         const response = await api.post('/users/login', loginData.value);
+        const user = response.data.user;
+
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', response.data.token);
+
         alert('You have successfully logged in');
+
+        if (user.role === 'landlord') {
+          router.push('/landlord');
+        } else if (user.role === 'renter') {
+          router.push('/renter');
+        } else {
+          router.push('/home');
+        }
+
         closeModal();
       } catch (error) {
         console.error('Error during authorization:', error);
@@ -231,18 +253,21 @@ export default {
   border-radius: 5px;
 }
 
+.card-choice {
+  width: 20rem;
+}
+
 #choice-form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
 #choice-form a {
   cursor: pointer;
 }
 
-.card .btn-gr,
+.card .btn-gr, 
 .card-choice .btn-gr {
   display: inline-flex;
   gap: 5%;
@@ -258,6 +283,28 @@ export default {
 #save-btn-gr {
   padding-top: 5%;
 }
+
+.role-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: white;
+  border: solid black;
+  border-radius: 8px;
+  padding: 13px;
+  width: calc(25% - 16px);
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.role-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: #f8f9fa;
+}
+
 
 .switch-mode {
   margin-top: 5%;

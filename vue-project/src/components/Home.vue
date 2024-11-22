@@ -126,7 +126,7 @@ export default {
         return {
             showModal,
             openModal,
-            closeModal
+            closeModal,
         };
     }
 };
@@ -223,7 +223,6 @@ main {
     justify-content: center;
     gap: 2%;
     text-wrap: nowrap;
-
 }
 
 .conven-img {

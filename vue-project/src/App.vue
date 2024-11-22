@@ -2,6 +2,7 @@
 import Home from './components/Home.vue'
 import MainLandlord from './components/MainLandlord.vue';
 import MainRenter from './components/MainRenter.vue';
+import Add_ad from './components/Add_ad.vue';
 </script>
 
 
@@ -10,9 +11,9 @@ import MainRenter from './components/MainRenter.vue';
   </header>
 
   <main>
-    <Home />
-    <!-- <MainLandlord /> -->
-    <!-- <MainRenter /> -->
+    <router-view />
+    <!-- <Add_ad /> -->
+
   </main>
 </template>
 

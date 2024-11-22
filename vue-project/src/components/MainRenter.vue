@@ -12,9 +12,12 @@
                 <input type="search" id="search" placeholder="Почати пошук" />
                 <img id="search-sign" src="../assets/img/search-sign.png" alt="search-sign" />
             </section>
+            <section>
+                <button id="exit-btn" class="btn btn-dark" type="button" @click="backToHome()">Вийти</button>
+            </section>
         </header>
 
-        <main id="main-landlord-body">
+        <main id="main-renter-body">
         </main>
 
         <footer>
@@ -30,15 +33,29 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
 export default {
-    name: 'MainRenter'
+    name: 'MainRenter',
+
+    setup() {
+        const router = useRouter();
+        const backToHome = () => {
+            router.push('/home');
+        };
+        return {
+            backToHome,
+        };
+    },
 };
 </script>
 
 <style scoped>
 #mainrenter-header {
-    gap: 50%;
+    gap: 25%;
     padding-bottom: 1%;
 }
 
+#exit-btn {
+    padding: 5px 20px;
+}
 </style>

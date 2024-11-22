@@ -6,12 +6,12 @@ import Home from './components/Home.vue';
 const routes = [
     {
         path: '/landlord',
-        name: 'Landlord',
+        name: 'MainLandlord',
         component: MainLandlord,
     },
     {
         path: '/renter',
-        name: 'Renter',
+        name: 'MainRenter',
         component: MainRenter,
     },
     {
@@ -19,10 +19,10 @@ const routes = [
         name: 'Home',
         component: Home,
     },
-    // {
-    //     path: '/',
-    //     redirect: '/home',
-    // },
+    {
+        path: '/',
+        redirect: '/home',
+    },
 ];
 
 const router = createRouter({
@@ -30,23 +30,28 @@ const router = createRouter({
     routes,
 });
 
-/*router.beforeEach((to, from, next) => {
-    const user = JSON.parse(localStorage.getItem('user'));
+// router.beforeEach((to, from, next) => {
+//     const user = JSON.parse(localStorage.getItem('user'));
 
-    if (to.path === '/landlord' && user?.role !== 'landlord') {
-        return next('/home'); 
-    }
+//     if (!user && (to.path === '/landlord' || to.path === '/renter')) {
+//         return next('/home');
+//     }
 
-    if (to.path === '/renter' && user?.role !== 'renter') {
-        return next('/home'); 
-    }
+//     if (to.path === '/landlord' && user?.role !== 'landlord') {
+//         return next('/home');
+//     }
 
-    if (to.path === '/home' && user) {
-        if (user.role === 'landlord') return next('/landlord');
-        if (user.role === 'renter') return next('/renter');
-      }      
+//     if (to.path === '/renter' && user?.role !== 'renter') {
+//         return next('/home');
+//     }
 
-    next();
-});*/
+//     if (to.path === '/home' && user) {
+//         if (user.role === 'landlord') return next('/landlord');
+//         if (user.role === 'renter') return next('/renter');
+//     }
+
+//     next();
+// });
+
 
 export default router;
