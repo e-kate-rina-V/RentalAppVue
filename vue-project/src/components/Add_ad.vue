@@ -1,10 +1,9 @@
 <template>
     <div v-if="showModal" class="modal">
         <div class="card-choice-prem-load">
-
-            <form v-if="currentStep === 1" class="modal-content-prem-load" @submit.prevent="nextStep">
+            <form v-if="currentStep === 1" class="modal-content-prem-load">
                 <div id="choice-form">
-                    <h2>Яке помешкання ви пропонуєте ?</h2>
+                    <h2>Яке помешкання ви пропонуєте?</h2>
                     <section class="conven-prem-load">
                         <button type="button" class="conven-card-prem-load" @click="selectMode('house')">
                             <img class="conven-img" src="../assets/img/house_icon.png" alt="house_icon">
@@ -22,7 +21,7 @@
                 </div>
             </form>
 
-            <form v-if="currentStep === 2" class="modal-content-prem-load" @submit.prevent="nextStep">
+            <form v-if="currentStep === 2" class="modal-content-prem-load">
                 <div id="choice-form">
                     <h2>Оберіть тип помешкання:</h2>
                     <div class="btn-gr-room" role="group">
@@ -35,7 +34,7 @@
                 </div>
             </form>
 
-            <form v-if="currentStep === 3" class="modal-content-prem-load" @submit.prevent="nextStep">
+            <form v-if="currentStep === 3" class="modal-content-prem-load">
                 <div id="choice-form">
                     <h2>Оберіть кількість гостей</h2>
                     <div class="guest-counter">
@@ -46,11 +45,13 @@
                             <button class="guest-btn" type="button" @click="increase">+</button>
                         </div>
                     </div>
-                    <button class="btn btn-dark" type="button" @click="selectGuestCount(counter)">Далі</button>
+                    <button id="cont-btn" class="btn btn-dark" type="button"
+                        @click="selectGuestCount(counter)">Далі</button>
                 </div>
             </form>
 
-            <form v-if="currentStep === 4" class="modal-content-prem-load-conven" @submit.prevent="nextStep">
+
+            <form v-if="currentStep === 4" class="modal-content-prem-load-conven">
                 <div id="choice-form">
                     <h2>Оберіть зручності</h2>
                     <section class="conven-prem-load">
@@ -128,18 +129,49 @@
                             <p>Вогнегасник</p>
                         </button>
                     </section>
-                    <button class="btn btn-dark" type="button">Далі</button>
+                    <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
                 </div>
             </form>
 
-            <form v-if="currentStep === 5" class="modal-content-prem-load" @submit.prevent="submitForm">
+            <form v-if="currentStep === 5" class="modal-content-prem-load">
+                <div id="choice-form">
+                    <h2>Додайте опис вашого приміщення</h2>
+                    <div>
+                        <input name="description" type="text"  v-model="formData.description">
+                    </div>
+                    <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
+                </div>
+            </form>
+
+            <form v-if="currentStep === 6" class="modal-content-prem-load">
+                <div id="choice-form">
+                    <h2>Додайте титульну назву та адресу</h2>
+                    <span>Наприклад: двоповерховий будинок у центрі міста, Київ</span>
+                    <input name="title" type="text"  v-model="formData.title">
+                    <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
+                </div>
+            </form>
+
+            <form v-if="currentStep === 7" class="modal-content-prem-load">
+                <div id="choice-form">
+                    <h2>Укажіть ціну за одну ніч (у гривнях)</h2>
+                    <div>
+                        <input name="price" type="number" min="1" v-model="formData.price">
+                    </div>
+                    <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
+                </div>
+            </form>
+
+            <form v-if="currentStep === 8" class="modal-content-prem-load">
                 <div id="choice-form">
                     <h2>Завантажте декілька фото</h2>
-                    <span>Не менше 2-х</span>
-                    <div>
-                        <input type="file">
+                    <div id="photo-download">
+                        <div>
+                            <input type="file" multiple>
+                        </div>
+                        <span>(не менше 2-х)</span>
                     </div>
-                    <button class="btn btn-dark" type="button" @click="submitForm">Далі</button>
+                    <button id="cont-btn" class="btn btn-dark" type="button" @click="submitForm">Завершити</button>
                 </div>
             </form>
         </div>
@@ -148,7 +180,7 @@
 
 <script>
 import { ref } from 'vue';
-
+import api from '../api/api.js';
 export default {
     name: 'Add_ad',
     props: {
@@ -156,15 +188,22 @@ export default {
     },
     emits: ['close-modal', 'form-submitted'],
     setup(props, { emit }) {
-        const currentStep = ref(1); // Текущий шаг
+        const currentStep = ref(1);
         const formData = ref({
-            prem_mode: '',
             prem_type: '',
+            accom_type: '',
             guest_count: 1,
-            conven: [], // Массив выбранных удобств
+            conven: [],
+            description: '',
+            price: 1,
+            title: '',
         });
 
         const counter = ref(1);
+
+        const nextStep = () => {
+            currentStep.value++;
+        };
 
         const increase = () => {
             counter.value++;
@@ -177,12 +216,12 @@ export default {
         };
 
         const selectMode = (mode) => {
-            formData.value.prem_mode = mode;
+            formData.value.prem_type = mode;
             nextStep();
         };
 
         const selectType = (type) => {
-            formData.value.prem_type = type;
+            formData.value.accom_type = type;
             nextStep();
         };
 
@@ -198,25 +237,42 @@ export default {
             } else {
                 formData.value.conven.splice(index, 1);
             }
-            console.log('Selected conveniences:', formData.value.conven);
         };
-
 
         const isConvenSelected = (convenience) => {
             return formData.value.conven.includes(convenience);
         };
 
-        const nextStep = () => {
-            if (currentStep.value < 6) {
-                currentStep.value++;
+        const submitForm = async () => {
+            const formDataObj = new FormData();
+            formDataObj.append('title', formData.value.title);
+            formDataObj.append('description', formData.value.description);
+            formDataObj.append('prem_type', formData.value.prem_type);
+            formDataObj.append('accom_type', formData.value.accom_type);
+            formDataObj.append('guest_count', formData.value.guest_count);
+            formDataObj.append('price', formData.value.price);
+
+            formData.value.conven.forEach((item) => {
+                formDataObj.append('conven[]', item);
+            });
+
+            const fileInputs = document.querySelector('input[type="file"]');
+            if (fileInputs.files.length > 0) {
+                Array.from(fileInputs.files).forEach((file) => {
+                    formDataObj.append('materials[]', file);
+                });
             }
-        };
 
-
-        const submitForm = () => {
-            console.log('Form Data:', formData.value);
-            emit('form-submitted', formData.value);
-            emit('close-modal');
+            try {
+                const response = await api.post('/ads/ad_register', formDataObj, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                alert('Ad registered successfully');
+            } catch (error) {
+                console.error(error);
+            }
         };
 
         return {
@@ -225,6 +281,7 @@ export default {
             counter,
             increase,
             decrease,
+            nextStep,
             selectMode,
             selectType,
             selectGuestCount,
@@ -235,6 +292,7 @@ export default {
     },
 };
 </script>
+
 
 
 <style scoped>
@@ -358,5 +416,22 @@ export default {
     font-size: 16px;
     font-weight: 500;
     color: #333;
+}
+
+#photo_download {
+    display: grid;
+}
+
+#photo_download span {
+    margin-top: 2%;
+}
+
+#choice-form h2 {
+    margin-bottom: 3%;
+}
+
+
+#cont-btn {
+    margin-top: 3%;
 }
 </style>

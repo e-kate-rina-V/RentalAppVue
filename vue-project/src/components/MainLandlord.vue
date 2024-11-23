@@ -17,7 +17,6 @@
         <main id="main-landlord-body">
         </main>
 
-        <!-- Используем v-model для управления состоянием модального окна -->
         <Add_ad v-model:showModal="showModal" />
 
         <footer>
