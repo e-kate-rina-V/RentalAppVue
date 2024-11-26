@@ -7,12 +7,16 @@
             <h2>Оберіть роль</h2>
             <div class="btn-gr" role="group">
               <div class="role-btn">
-                <img class="conven-img" src="../assets/img/renter_icon.png" alt="renter_icon">
-                <button class="btn btn-dark" type="button" @click="selectRole('renter')">Орендатор</button>
+                <img class="conven-img" src="../assets/img/renter_icon.png" alt="renter_icon" />
+                <button class="btn btn-dark" type="button" @click="selectRole('renter')">
+                  Орендатор
+                </button>
               </div>
               <div class="role-btn">
-                <img class="conven-img" src="../assets/img/landlord_icon.png" alt="landlord_icon">
-                <button class="btn btn-dark" type="button" @click="selectRole('landlord')">Орендодавець</button>
+                <img class="conven-img" src="../assets/img/landlord_icon.png" alt="landlord_icon" />
+                <button class="btn btn-dark" type="button" @click="selectRole('landlord')">
+                  Орендодавець
+                </button>
               </div>
             </div>
             <p @click="switchMode" class="switch-mode">I already have an account</p>
@@ -25,25 +29,34 @@
           <div>
             <label for="name">Name:</label>
             <input class="form-control" type="text" id="name" v-model="formData.name" required />
-            <span v-if="validationErrors.name" class="error">{{ validationErrors.name[0] }}</span>
+            <span v-if="validationErrors.name" class="error">{{
+              validationErrors.name[0]
+            }}</span>
 
             <label for="email">Email:</label>
             <input class="form-control" type="email" id="email" v-model="formData.email" required />
-            <span v-if="validationErrors.email" class="error">{{ validationErrors.email[0] }}</span>
+            <span v-if="validationErrors.email" class="error">{{
+              validationErrors.email[0]
+            }}</span>
 
             <label for="password">Password:</label>
             <input class="form-control" type="password" id="password" v-model="formData.password" required />
-            <span v-if="validationErrors.password" class="error">{{ validationErrors.password[0] }}</span>
+            <span v-if="validationErrors.password" class="error">{{
+              validationErrors.password[0]
+            }}</span>
 
             <label for="confirm_password">Confirm password:</label>
             <input class="form-control" type="password" id="confirm_password" v-model="formData.password_confirmation"
               required />
             <span v-if="validationErrors.password_confirmation" class="error">{{
-              validationErrors.password_confirmation[0] }}</span>
+              validationErrors.password_confirmation[0]
+            }}</span>
 
             <div class="btn-gr" id="save-btn-gr">
               <button class="btn btn-success" type="submit">Register</button>
-              <button class="btn btn-danger" type="button" @click="closeModal">Cancel</button>
+              <button class="btn btn-danger" type="button" @click="closeModal">
+                Cancel
+              </button>
             </div>
           </div>
           <p @click="switchMode" class="switch-mode">I already have an account</p>
@@ -54,16 +67,22 @@
           <div>
             <label for="email">Email:</label>
             <input class="form-control" type="email" id="email" v-model="loginData.email" required />
-            <span v-if="validationErrors.email" class="error">{{ validationErrors.email[0] }}</span>
+            <span v-if="validationErrors.email" class="error">{{
+              validationErrors.email[0]
+            }}</span>
 
             <label for="password">Password:</label>
             <input class="form-control" type="password" id="password" v-model="loginData.password" required />
 
-            <span v-if="validationErrors.auth" class="error">{{ validationErrors.auth[0] }}</span>
+            <span v-if="validationErrors.auth" class="error">{{
+              validationErrors.auth[0]
+            }}</span>
 
             <div class="btn-gr" id="save-btn-gr">
               <button class="btn btn-success" type="submit">Login</button>
-              <button class="btn btn-danger" type="button" @click="closeModal">Cancel</button>
+              <button class="btn btn-danger" type="button" @click="closeModal">
+                Cancel
+              </button>
             </div>
           </div>
           <p @click="switchMode" class="switch-mode">I want to register</p>
@@ -74,56 +93,57 @@
 </template>
 
 <script>
-
-import { ref } from 'vue';
-import api from '../api/api.js';
-import { validateName, validateEmail, validatePassword } from '../validation/validation.js';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { registerUser, loginUser } from "../api/api.js"; 
+import { validateName, validateEmail, validatePassword } from "../validation/validation.js"; 
 
 export default {
-  name: 'Authorization',
+  name: "Authorization",
   props: {
     showModal: Boolean,
   },
-  emits: ['close-modal'],
+  emits: ["close-modal"],
   setup(props, { emit }) {
     const router = useRouter();
     const showForm = ref(false);
     const isLoginMode = ref(false);
-    const role = ref('');
+    const role = ref("");
     const formData = ref({
-      name: '',
-      email: '',
-      password: '',
-      password_confirmation: '',
-      role: '',
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      role: "",
     });
 
     const loginData = ref({
-      email: '',
-      password: '',
+      email: "",
+      password: ""
     });
 
     const validationErrors = ref({});
 
+
     const resetForm = () => {
       formData.value = {
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-        role: '',
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        role: "",
       };
       loginData.value = {
-        email: '',
-        password: '',
+        email: "",
+        password: "",
       };
       validationErrors.value = {};
     };
 
+
     const closeModal = () => {
       resetForm();
-      emit('close-modal');
+      emit("close-modal");
     };
 
     const switchMode = () => {
@@ -141,7 +161,7 @@ export default {
       if (error.response && error.response.status === 422) {
         validationErrors.value = error.response.data.errors || {};
       } else {
-        console.error('Error:', error.message || error);
+        console.error("Error:", error.message || error);
       }
     };
 
@@ -164,58 +184,69 @@ export default {
       }
 
       try {
-        await api.post('/users/register', formData.value);
-        alert('Registration was successful');
-        closeModal();
+        const response = await registerUser(formData.value);
+
+        console.log('Registration response:', response);
+
+        if (response && response.token && response.user) {
+          localStorage.setItem("auth_token", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+
+          alert("Registration was successful");
+          closeModal();
+        } else {
+          throw new Error("Token or user data not found in response");
+        }
       } catch (error) {
+        console.error("Error during registration:", error);
         handleValidationErrors(error);
       }
     };
 
+
     const submitLoginForm = async () => {
       validationErrors.value = {};
 
-      const emailError = validateEmail(loginData.value.email);
+      if (!loginData.value.email || !loginData.value.password) {
+        validationErrors.value.auth = ["Email and password are required"];
+        return;
+      }
 
-      if (emailError) validationErrors.value.email = [emailError];
-
-      if (Object.keys(validationErrors.value).length > 0) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(loginData.value.email)) {
+        validationErrors.value.email = ["Please enter a valid email address"];
         return;
       }
 
       try {
-        const response = await api.post('/users/login', loginData.value);
-        const user = response.data.user;
+        const response = await loginUser(loginData.value);  
 
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token', response.data.token);
+        const user = response.user;  
 
-        alert('You have successfully logged in');
+        alert("Login was successful");
 
-        if (user.role === 'landlord') {
-          router.push('/landlord');
-        } else if (user.role === 'renter') {
-          router.push('/renter');
+        const userRole = user.role;  
+        if (userRole === "renter") {
+          router.push("/renter");  
+        } else if (userRole === "landlord") {
+          router.push("/landlord");  
         } else {
-          router.push('/home');
+          console.error("Unexpected user role:", userRole);
+          validationErrors.value.auth = ["Unexpected user role"];
         }
 
         closeModal();
       } catch (error) {
-        console.error('Error during authorization:', error);
-        if (error.response) {
-          if (error.response.status === 401) {
-            validationErrors.value.auth = ['Incorrect email or password'];
-          } else if (error.response.status === 422) {
-            console.error('Validation errors:', error.response.data.errors);
-          } else {
-            console.error('Error during authorization:', error.response);
-          }
+
+        if (error.response && error.response.data && error.response.data.error) {
+          validationErrors.value.auth = [error.response.data.error];
         } else {
-          console.error('Error during authorization:', error.message);
+          console.error("Error:", error.message || error);
+          validationErrors.value.auth = ["An unexpected error occurred. Please try again later."];
         }
       }
     };
+
 
     return {
       showForm,
@@ -267,7 +298,7 @@ export default {
   cursor: pointer;
 }
 
-.card .btn-gr, 
+.card .btn-gr,
 .card-choice .btn-gr {
   display: inline-flex;
   gap: 5%;
@@ -304,7 +335,6 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background: #f8f9fa;
 }
-
 
 .switch-mode {
   margin-top: 5%;

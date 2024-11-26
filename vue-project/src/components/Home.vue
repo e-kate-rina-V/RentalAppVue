@@ -89,6 +89,7 @@
             </section>
         </main>
 
+        <!-- Компонент Authorization с передачей состояния -->
         <Authorization :showModal="showModal" @close-modal="closeModal" />
 
         <footer>
@@ -113,12 +114,14 @@ export default {
         Authorization
     },
     setup() {
-        const showModal = ref(false);
+        const showModal = ref(false); // Состояние модального окна
 
+        // Открытие модального окна
         const openModal = () => {
             showModal.value = true;
         };
 
+        // Закрытие модального окна
         const closeModal = () => {
             showModal.value = false;
         };
@@ -131,6 +134,7 @@ export default {
     }
 };
 </script>
+
 
 <style>
 #carouselExample {

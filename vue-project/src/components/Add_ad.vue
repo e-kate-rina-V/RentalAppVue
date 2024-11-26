@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showModal" class="modal">
+    <!-- <div v-if="showModal" class="modal">
         <div class="card-choice-prem-load">
             <form v-if="currentStep === 1" class="modal-content-prem-load">
                 <div id="choice-form">
@@ -175,122 +175,122 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script>
-import { ref } from 'vue';
-import api from '../api/api.js';
-export default {
-    name: 'Add_ad',
-    props: {
-        showModal: Boolean,
-    },
-    emits: ['close-modal', 'form-submitted'],
-    setup(props, { emit }) {
-        const currentStep = ref(1);
-        const formData = ref({
-            prem_type: '',
-            accom_type: '',
-            guest_count: 1,
-            conven: [],
-            description: '',
-            price: 1,
-            title: '',
-        });
+// import { ref } from 'vue';
+// import api from '../api/api.js';
+// export default {
+//     name: 'Add_ad',
+//     props: {
+//         showModal: Boolean,
+//     },
+//     emits: ['close-modal', 'form-submitted'],
+//     setup(props, { emit }) {
+//         const currentStep = ref(1);
+//         const formData = ref({
+//             prem_type: '',
+//             accom_type: '',
+//             guest_count: 1,
+//             conven: [],
+//             description: '',
+//             price: 1,
+//             title: '',
+//         });
 
-        const counter = ref(1);
+//         const counter = ref(1);
 
-        const nextStep = () => {
-            currentStep.value++;
-        };
+//         const nextStep = () => {
+//             currentStep.value++;
+//         };
 
-        const increase = () => {
-            counter.value++;
-        };
+//         const increase = () => {
+//             counter.value++;
+//         };
 
-        const decrease = () => {
-            if (counter.value > 1) {
-                counter.value--;
-            }
-        };
+//         const decrease = () => {
+//             if (counter.value > 1) {
+//                 counter.value--;
+//             }
+//         };
 
-        const selectMode = (mode) => {
-            formData.value.prem_type = mode;
-            nextStep();
-        };
+//         const selectMode = (mode) => {
+//             formData.value.prem_type = mode;
+//             nextStep();
+//         };
 
-        const selectType = (type) => {
-            formData.value.accom_type = type;
-            nextStep();
-        };
+//         const selectType = (type) => {
+//             formData.value.accom_type = type;
+//             nextStep();
+//         };
 
-        const selectGuestCount = (count) => {
-            formData.value.guest_count = count;
-            nextStep();
-        };
+//         const selectGuestCount = (count) => {
+//             formData.value.guest_count = count;
+//             nextStep();
+//         };
 
-        const toggleConven = (convenience) => {
-            const index = formData.value.conven.indexOf(convenience);
-            if (index === -1) {
-                formData.value.conven.push(convenience);
-            } else {
-                formData.value.conven.splice(index, 1);
-            }
-        };
+//         const toggleConven = (convenience) => {
+//             const index = formData.value.conven.indexOf(convenience);
+//             if (index === -1) {
+//                 formData.value.conven.push(convenience);
+//             } else {
+//                 formData.value.conven.splice(index, 1);
+//             }
+//         };
 
-        const isConvenSelected = (convenience) => {
-            return formData.value.conven.includes(convenience);
-        };
+//         const isConvenSelected = (convenience) => {
+//             return formData.value.conven.includes(convenience);
+//         };
 
-        const submitForm = async () => {
-            const formDataObj = new FormData();
-            formDataObj.append('title', formData.value.title);
-            formDataObj.append('description', formData.value.description);
-            formDataObj.append('prem_type', formData.value.prem_type);
-            formDataObj.append('accom_type', formData.value.accom_type);
-            formDataObj.append('guest_count', formData.value.guest_count);
-            formDataObj.append('price', formData.value.price);
+//         const submitForm = async () => {
+//             const formDataObj = new FormData();
+//             formDataObj.append('title', formData.value.title);
+//             formDataObj.append('description', formData.value.description);
+//             formDataObj.append('prem_type', formData.value.prem_type);
+//             formDataObj.append('accom_type', formData.value.accom_type);
+//             formDataObj.append('guest_count', formData.value.guest_count);
+//             formDataObj.append('price', formData.value.price);
 
-            formData.value.conven.forEach((item) => {
-                formDataObj.append('conven[]', item);
-            });
+//             // formData.value.conven.forEach((item) => {
+//             //     formDataObj.append('conven[]', item);
+//             // });
 
-            const fileInputs = document.querySelector('input[type="file"]');
-            if (fileInputs.files.length > 0) {
-                Array.from(fileInputs.files).forEach((file) => {
-                    formDataObj.append('materials[]', file);
-                });
-            }
+//             // const fileInputs = document.querySelector('input[type="file"]');
+//             // if (fileInputs.files.length > 0) {
+//             //     Array.from(fileInputs.files).forEach((file) => {
+//             //         formDataObj.append('materials[]', file);
+//             //     });
+//             // }
 
-            try {
-                const response = await api.post('/ads/ad_register', formDataObj, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                alert('Ad registered successfully');
-            } catch (error) {
-                console.error(error);
-            }
-        };
+//             try {
+//                 const response = await api.post('/ads/ad_register', formDataObj, {
+//                     headers: {
+//                         'Content-Type': 'multipart/form-data',
+//                     },
+//                 });
+//                 alert('Ad registered successfully');
+//             } catch (error) {
+//                 console.error(error);
+//             }
+//         };
 
-        return {
-            currentStep,
-            formData,
-            counter,
-            increase,
-            decrease,
-            nextStep,
-            selectMode,
-            selectType,
-            selectGuestCount,
-            toggleConven,
-            isConvenSelected,
-            submitForm,
-        };
-    },
-};
+//         return {
+//             currentStep,
+//             formData,
+//             counter,
+//             increase,
+//             decrease,
+//             nextStep,
+//             selectMode,
+//             selectType,
+//             selectGuestCount,
+//             toggleConven,
+//             isConvenSelected,
+//             submitForm,
+//         };
+//     },
+// };
 </script>
 
 

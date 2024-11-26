@@ -1,61 +1,51 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
     },
+    withCredentials: true,
 });
 
-async function getCsrfToken() {
+export const registerUser = async (data) => {
     try {
-        const response = await axios.get('/api/csrf-token');
-        const csrfToken = response.data.csrf_token;
-        localStorage.setItem('csrf_token', csrfToken);
-        return csrfToken;
+        const response = await api.post('register', data);
+
+        console.log('API Response:', response.data);
+
+        return response.data;
     } catch (error) {
-        console.error('Error getting CSRF token:', error);
-        return null;
-    }
-}
 
-api.interceptors.request.use(
-    async (config) => {
-        let csrfToken = localStorage.getItem('csrf_token');
-
-        if (!csrfToken) {
-            csrfToken = await getCsrfToken();
-        }
-
-        if (csrfToken) {
-            config.headers['X-CSRF-TOKEN'] = csrfToken;
-        }
-
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
         if (error.response) {
-            if (error.response.status === 422) {
-                const errors = error.response.data.errors;
-                Object.keys(errors).forEach((field) => {
-                    const messages = errors[field].join(', ');
-                    alert(`Error in ${field}: ${messages}`);
-                });
-            } else if (error.response.status === 401) {
-                alert('Unauthorized access. Please sign in.');
-            } else {
-                alert(`Error: ${error.response.status}`);
-            }
+            console.error('API Error:', error.response.data || error.response.status);
+            throw error.response.data || error.response.status;
         } else {
-            alert('Error connecting to server.');
+            console.error('Unknown Error:', error.message || error);
+            throw error.message || error;
         }
-        return Promise.reject(error);
     }
-);
+};
 
-export default api;
+
+export const loginUser = async (data) => {
+    try {
+        const response = await api.post('login', data);  
+        console.log('Login API Response:', response.data);
+        return response.data; 
+    } catch (error) {
+        console.error('API Error:', error.response?.data || error.message || error);
+        throw error.response?.data || error;  
+    }
+};
+
+
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+

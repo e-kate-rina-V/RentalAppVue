@@ -13,7 +13,7 @@
                 <img id="search-sign" src="../assets/img/search-sign.png" alt="search-sign" />
             </section>
             <section>
-                <button id="exit-btn" class="btn btn-dark" type="button" @click="backToHome()">Вийти</button>
+                <button id="exit-btn" class="btn btn-dark" type="button" @click="logout">Вийти</button>
             </section>
         </header>
 
@@ -34,16 +34,30 @@
 
 <script>
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+
 export default {
     name: 'MainRenter',
 
     setup() {
         const router = useRouter();
-        const backToHome = () => {
-            router.push('/home');
+
+        const logout = async () => {
+            try {
+                const response = await axios.post('http://localhost:8080/logout', {}, {
+                    withCredentials: true,
+                });
+                router.push('/home');
+
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Произошла ошибка при выходе. Попробуйте снова.');
+            }
         };
+
+
         return {
-            backToHome,
+            logout,
         };
     },
 };

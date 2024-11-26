@@ -10,7 +10,7 @@
 
             <section id="add-btn-section">
                 <button @click="openModal" class="btn btn-dark" type="button">Розмістити оголошення</button>
-                <button class="btn btn-dark" type="button" @click="backToHome()">Вийти</button>
+                <button class="btn btn-dark" type="button" @click="logout">Вийти</button>
             </section>
         </header>
 
@@ -34,6 +34,7 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from "axios";
 import Add_ad from './Add_ad.vue';
 
 export default {
@@ -48,15 +49,22 @@ export default {
         const openModal = () => {
             showModal.value = true;
         };
-
-        const backToHome = () => {
-            router.push('/home');
-        };
+        // const logout = async () => {
+        //     try {
+        //         await logoutUser();  
+        //         localStorage.removeItem("auth_token"); 
+        //         localStorage.removeItem("user");  
+        //         delete axios.defaults.headers.common["Authorization"];  
+                
+        //         router.push('/home');
+        //     } catch (error) {
+        //         console.error("Ошибка при выходе из системы:", error);
+        //     }
+        // };
 
         return {
             showModal,
             openModal,
-            backToHome,
         };
     },
 };
