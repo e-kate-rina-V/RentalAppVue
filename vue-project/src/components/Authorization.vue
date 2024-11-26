@@ -95,8 +95,8 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { registerUser, loginUser } from "../api/api.js"; 
-import { validateName, validateEmail, validatePassword } from "../validation/validation.js"; 
+import { registerUser, loginUser } from "../api/api.js";
+import { validateName, validateEmail, validatePassword } from "../validation/validation.js";
 
 export default {
   name: "Authorization",
@@ -188,21 +188,18 @@ export default {
 
         console.log('Registration response:', response);
 
-        if (response && response.token && response.user) {
-          localStorage.setItem("auth_token", response.token);
-          localStorage.setItem("user", JSON.stringify(response.user));
-
-          alert("Registration was successful");
+        if (response && response.user) {
+          alert('Registration was successful');
+          router.push('/home');
           closeModal();
         } else {
-          throw new Error("Token or user data not found in response");
+          throw new Error('User data not found in response');
         }
       } catch (error) {
-        console.error("Error during registration:", error);
+        console.error('Error during registration:', error);
         handleValidationErrors(error);
       }
     };
-
 
     const submitLoginForm = async () => {
       validationErrors.value = {};
@@ -219,17 +216,17 @@ export default {
       }
 
       try {
-        const response = await loginUser(loginData.value);  
+        const response = await loginUser(loginData.value);
 
-        const user = response.user;  
+        const user = response.user;
 
         alert("Login was successful");
 
-        const userRole = user.role;  
+        const userRole = user.role;
         if (userRole === "renter") {
-          router.push("/renter");  
+          router.push("/renter");
         } else if (userRole === "landlord") {
-          router.push("/landlord");  
+          router.push("/landlord");
         } else {
           console.error("Unexpected user role:", userRole);
           validationErrors.value.auth = ["Unexpected user role"];

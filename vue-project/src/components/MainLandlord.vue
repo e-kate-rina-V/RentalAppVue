@@ -17,7 +17,7 @@
         <main id="main-landlord-body">
         </main>
 
-        <Add_ad v-model:showModal="showModal" />
+        <Add_ad :showModal="showModal" @close-modal="closeModal" />
 
         <footer>
             <div class="footer-text">
@@ -34,7 +34,7 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from "axios";
+import { logoutUser } from '@/api/api.js';
 import Add_ad from './Add_ad.vue';
 
 export default {
@@ -49,22 +49,26 @@ export default {
         const openModal = () => {
             showModal.value = true;
         };
-        // const logout = async () => {
-        //     try {
-        //         await logoutUser();  
-        //         localStorage.removeItem("auth_token"); 
-        //         localStorage.removeItem("user");  
-        //         delete axios.defaults.headers.common["Authorization"];  
-                
-        //         router.push('/home');
-        //     } catch (error) {
-        //         console.error("Ошибка при выходе из системы:", error);
-        //     }
-        // };
+
+        const closeModal = () => {
+            showModal.value = false;
+        };
+
+        const logout = async () => {
+            try {
+                await logoutUser();  
+                router.push('/home');
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Произошла ошибка при выходе. Попробуйте снова.');
+            }
+        };
 
         return {
             showModal,
             openModal,
+            closeModal,
+            logout,
         };
     },
 };

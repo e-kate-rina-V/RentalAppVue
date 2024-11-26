@@ -4,7 +4,6 @@ const api = axios.create({
     baseURL: 'http://localhost:8080',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
     },
     withCredentials: true,
 });
@@ -13,11 +12,10 @@ export const registerUser = async (data) => {
     try {
         const response = await api.post('register', data);
 
-        console.log('API Response:', response.data);
+        console.log('Registration API Response:', response.data);
 
         return response.data;
     } catch (error) {
-
         if (error.response) {
             console.error('API Error:', error.response.data || error.response.status);
             throw error.response.data || error.response.status;
@@ -28,24 +26,42 @@ export const registerUser = async (data) => {
     }
 };
 
-
 export const loginUser = async (data) => {
     try {
-        const response = await api.post('login', data);  
+        const response = await api.post('login', data);
         console.log('Login API Response:', response.data);
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error('API Error:', error.response?.data || error.message || error);
-        throw error.response?.data || error;  
+        throw error.response?.data || error;
     }
 };
 
-
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+export const logoutUser = async () => {
+    try {
+        const response = await api.post('logout', {}, {
+            withCredentials: true,
+        });
+        alert("Logout successfull");
+        return response.data;
+    } catch (error) {
+        console.error('Logout error:', error);
+        throw error;
     }
-    return config;
-});
+};
+
+export const registerAd = async (formData) => {
+    try {
+        const response = await api.post('ad_register', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error;
+    }
+};
+
 

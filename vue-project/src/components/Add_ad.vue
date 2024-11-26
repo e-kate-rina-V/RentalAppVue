@@ -1,5 +1,5 @@
 <template>
-    <!-- <div v-if="showModal" class="modal">
+    <div v-if="showModal" class="modal">
         <div class="card-choice-prem-load">
             <form v-if="currentStep === 1" class="modal-content-prem-load">
                 <div id="choice-form">
@@ -41,12 +41,12 @@
                         <span class="guest-label">Гості</span>
                         <div class="guest-controls">
                             <button class="guest-btn" type="button" @click="decrease">−</button>
-                            <span class="guest-value">{{ counter }}</span>
+                            <span class="guest-value">{{ formData.guestCount }}</span>
                             <button class="guest-btn" type="button" @click="increase">+</button>
                         </div>
                     </div>
                     <button id="cont-btn" class="btn btn-dark" type="button"
-                        @click="selectGuestCount(counter)">Далі</button>
+                        @click="selectGuestCount(formData.guestCount)">Далі</button>
                 </div>
             </form>
 
@@ -137,7 +137,7 @@
                 <div id="choice-form">
                     <h2>Додайте опис вашого приміщення</h2>
                     <div>
-                        <input name="description" type="text"  v-model="formData.description">
+                        <input name="description" type="text" v-model="formData.description">
                     </div>
                     <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
                 </div>
@@ -147,7 +147,7 @@
                 <div id="choice-form">
                     <h2>Додайте титульну назву та адресу</h2>
                     <span>Наприклад: двоповерховий будинок у центрі міста, Київ</span>
-                    <input name="title" type="text"  v-model="formData.title">
+                    <input name="title" type="text" v-model="formData.title">
                     <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
                 </div>
             </form>
@@ -167,7 +167,7 @@
                     <h2>Завантажте декілька фото</h2>
                     <div id="photo-download">
                         <div>
-                            <input type="file" multiple>
+                            <input type="file" multiple @change="handleFileUpload">
                         </div>
                         <span>(не менше 2-х)</span>
                     </div>
@@ -175,125 +175,131 @@
                 </div>
             </form>
         </div>
-    </div> -->
+    </div>
 </template>
 
 <script>
-// import { ref } from 'vue';
-// import api from '../api/api.js';
-// export default {
-//     name: 'Add_ad',
-//     props: {
-//         showModal: Boolean,
-//     },
-//     emits: ['close-modal', 'form-submitted'],
-//     setup(props, { emit }) {
-//         const currentStep = ref(1);
-//         const formData = ref({
-//             prem_type: '',
-//             accom_type: '',
-//             guest_count: 1,
-//             conven: [],
-//             description: '',
-//             price: 1,
-//             title: '',
-//         });
+import { ref, reactive } from "vue";
+import { registerAd } from '@/api/api.js';
 
-//         const counter = ref(1);
+export default {
+    props: {
+        showModal: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    emits: ["onCloseModal"],
+    setup(_, { emit }) {
+        const currentStep = ref(1);
 
-//         const nextStep = () => {
-//             currentStep.value++;
-//         };
+        const formData = reactive({
+            title: "",
+            description: "",
+            premType: "",
+            accomType: "",
+            guestCount: 1,
+            price: null,
+            conveniences: [], 
+            materials: [],
+        });
 
-//         const increase = () => {
-//             counter.value++;
-//         };
+        const decrease = () => {
+            if (formData.guestCount > 1) {
+                formData.guestCount--;
+            }
+        };
 
-//         const decrease = () => {
-//             if (counter.value > 1) {
-//                 counter.value--;
-//             }
-//         };
+        const increase = () => {
+            formData.guestCount++;
+        };
 
-//         const selectMode = (mode) => {
-//             formData.value.prem_type = mode;
-//             nextStep();
-//         };
+        const nextStep = () => {
+            if (currentStep.value < 8) {
+                currentStep.value++;
+            }
+        };
 
-//         const selectType = (type) => {
-//             formData.value.accom_type = type;
-//             nextStep();
-//         };
+        const selectGuestCount = (count) => {
+            formData.guestCount = count;
+            currentStep.value++; 
+        };
 
-//         const selectGuestCount = (count) => {
-//             formData.value.guest_count = count;
-//             nextStep();
-//         };
+        const selectMode = (mode) => {
+            formData.premType = mode;
+            currentStep.value++;
+        };
 
-//         const toggleConven = (convenience) => {
-//             const index = formData.value.conven.indexOf(convenience);
-//             if (index === -1) {
-//                 formData.value.conven.push(convenience);
-//             } else {
-//                 formData.value.conven.splice(index, 1);
-//             }
-//         };
+        const selectType = (type) => {
+            formData.accomType = type;
+            currentStep.value++;
+        };
 
-//         const isConvenSelected = (convenience) => {
-//             return formData.value.conven.includes(convenience);
-//         };
+        const isConvenSelected = (conven) => {
+            return formData.conveniences.includes(conven);
+        };
 
-//         const submitForm = async () => {
-//             const formDataObj = new FormData();
-//             formDataObj.append('title', formData.value.title);
-//             formDataObj.append('description', formData.value.description);
-//             formDataObj.append('prem_type', formData.value.prem_type);
-//             formDataObj.append('accom_type', formData.value.accom_type);
-//             formDataObj.append('guest_count', formData.value.guest_count);
-//             formDataObj.append('price', formData.value.price);
+        const toggleConven = (conven) => {
+            const index = formData.conveniences.indexOf(conven);
+            if (index === -1) {
+                formData.conveniences.push(conven);
+            } else {
+                formData.conveniences.splice(index, 1);
+            }
+        };
 
-//             // formData.value.conven.forEach((item) => {
-//             //     formDataObj.append('conven[]', item);
-//             // });
+        const handleFileUpload = (event) => {
+            formData.materials = Array.from(event.target.files);
+        };
 
-//             // const fileInputs = document.querySelector('input[type="file"]');
-//             // if (fileInputs.files.length > 0) {
-//             //     Array.from(fileInputs.files).forEach((file) => {
-//             //         formDataObj.append('materials[]', file);
-//             //     });
-//             // }
+        const submitForm = async () => {
+            const formDataToSend = new FormData();
 
-//             try {
-//                 const response = await api.post('/ads/ad_register', formDataObj, {
-//                     headers: {
-//                         'Content-Type': 'multipart/form-data',
-//                     },
-//                 });
-//                 alert('Ad registered successfully');
-//             } catch (error) {
-//                 console.error(error);
-//             }
-//         };
+            formDataToSend.append("title", formData.title);
+            formDataToSend.append("description", formData.description);
+            formDataToSend.append("prem_type", formData.premType);
+            formDataToSend.append("accom_type", formData.accomType);
+            formDataToSend.append("guest_count", formData.guestCount);
+            formDataToSend.append("price", formData.price);
 
-//         return {
-//             currentStep,
-//             formData,
-//             counter,
-//             increase,
-//             decrease,
-//             nextStep,
-//             selectMode,
-//             selectType,
-//             selectGuestCount,
-//             toggleConven,
-//             isConvenSelected,
-//             submitForm,
-//         };
-//     },
-// };
+            formData.conveniences.forEach((conven, index) => {
+                formDataToSend.append(`conven[${index}]`, conven);
+            });
+
+            if (Array.isArray(formData.materials)) {
+                formData.materials.forEach((file, index) => {
+                    formDataToSend.append(`materials[${index}]`, file);
+                });
+            } else {
+                console.error('Materials is not an array');
+            }
+
+            try {
+                const response = await registerAd(formDataToSend);
+                alert(response.message);
+            } catch (error) {
+                console.error(error);
+                alert(error.message || "Ошибка при отправке данных");
+            }
+        };
+
+        return {
+            currentStep,
+            formData,
+            isConvenSelected,
+            toggleConven,
+            selectMode,
+            selectType,
+            increase,
+            decrease,
+            selectGuestCount,
+            handleFileUpload,
+            nextStep,
+            submitForm,
+        };
+    },
+};
 </script>
-
-
 
 <style scoped>
 .card-choice-prem-load {

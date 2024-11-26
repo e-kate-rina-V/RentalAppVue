@@ -34,7 +34,7 @@
 
 <script>
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { logoutUser } from '@/api/api.js';
 
 export default {
     name: 'MainRenter',
@@ -44,17 +44,13 @@ export default {
 
         const logout = async () => {
             try {
-                const response = await axios.post('http://localhost:8080/logout', {}, {
-                    withCredentials: true,
-                });
+                await logoutUser();  
                 router.push('/home');
-
             } catch (error) {
                 console.error('Logout error:', error);
                 alert('Произошла ошибка при выходе. Попробуйте снова.');
             }
         };
-
 
         return {
             logout,
