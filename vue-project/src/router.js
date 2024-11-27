@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainLandlord from './components/MainLandlord.vue';
 import MainRenter from './components/MainRenter.vue';
 import Home from './components/Home.vue';
+import PostedAds from './components/PostedAds.vue';
+import AdDetails from './components/AdDetails.vue';
+
 
 const routes = [
     {
@@ -13,6 +16,16 @@ const routes = [
         path: '/renter',
         name: 'MainRenter',
         component: MainRenter,
+    },
+    {
+        path: '/ads',
+        name: 'PostedAds',
+        component: PostedAds,
+    },
+    {
+        path: '/ads/:id',
+        name: 'AdDetails',
+        component: AdDetails
     },
     {
         path: '/home',

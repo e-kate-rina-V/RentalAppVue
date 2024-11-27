@@ -1,14 +1,11 @@
 <template>
     <div class="page-container">
-        <header id="mainlandlord-header">
-            <section>
-                <div id="main-name">
-                    <img id="main-icon" src="@/assets/img/bee_hive_icon.png" alt="hive" />
-                    <h2>HiveFind</h2>
-                </div>
-            </section>
+        <header id="header">
+
+            <Head />
 
             <section id="add-btn-section">
+                <button @click="goToAds" class="btn btn-dark" type="button">Мої оголошення</button>
                 <button @click="openModal" class="btn btn-dark" type="button">Розмістити оголошення</button>
                 <button class="btn btn-dark" type="button" @click="logout">Вийти</button>
             </section>
@@ -19,15 +16,7 @@
 
         <Add_ad :showModal="showModal" @close-modal="closeModal" />
 
-        <footer>
-            <div class="footer-text">
-                <p>Ⓒ 2024 HiveFind, Inc</p>
-                <p>·</p>
-                <a href="#">Конфіденційність</a>
-                <p>·</p>
-                <a href="#">Умови</a>
-            </div>
-        </footer>
+        <Footer />
     </div>
 </template>
 
@@ -35,12 +24,16 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { logoutUser } from '@/api/api.js';
+import Head from './vue_helpers/Head.vue';
+import Footer from './vue_helpers/footer.vue';
 import Add_ad from './Add_ad.vue';
 
 export default {
     name: 'MainLandlord',
     components: {
         Add_ad,
+        Head,
+        Footer
     },
     setup() {
         const router = useRouter();
@@ -54,9 +47,13 @@ export default {
             showModal.value = false;
         };
 
+        const goToAds = () => {
+            router.push("/ads");
+        }
+
         const logout = async () => {
             try {
-                await logoutUser();  
+                await logoutUser();
                 router.push('/home');
             } catch (error) {
                 console.error('Logout error:', error);
@@ -68,19 +65,14 @@ export default {
             showModal,
             openModal,
             closeModal,
+            goToAds,
             logout,
         };
     },
 };
 </script>
 
-
 <style scoped>
-#mainlandlord-header {
-    gap: 50%;
-    padding-bottom: 1%;
-}
-
 #add-btn-section {
     display: flex;
     gap: 5%;

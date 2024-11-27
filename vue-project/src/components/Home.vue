@@ -1,12 +1,8 @@
 <template>
     <div class="page-container">
         <header id="header">
-            <section>
-                <div id="main-name">
-                    <img id="main-icon" src="../assets/img/bee_hive_icon.png" alt="hive" />
-                    <h2>HiveFind</h2>
-                </div>
-            </section>
+
+            <Head />
 
             <section id="search-section">
                 <input type="search" id="search" placeholder="Почати пошук" />
@@ -46,7 +42,7 @@
             </div> -->
 
 
-            <p id="conv"> Зручності для гостей</p>
+            <p id="conv-p"> Зручності для гостей</p>
             <section id="conven" class="d-flex flex-row">
                 <div class="conven-card">
                     <img class="conven-img" src="../assets/img/cutlery_icon.png" alt="cutlery_icon">
@@ -60,24 +56,12 @@
                     <img class="conven-img" src="../assets/img/paw_icon.png" alt="paw_icon">
                     <p>Можна з тваринами</p>
                 </div>
-                <div class="conven-card">
-                    <img class="conven-img" src="../assets/img/laptop_icon.png" alt="laptop_icon">
-                    <p>Робоче місце</p>
-                </div>
-                <div class="conven-card">
-                    <img class="conven-img" src="../assets/img/parking_icon.png" alt="parking_icon">
-                    <p>Паркінг</p>
-                </div>
 
                 <div class="conven-card">
                     <img class="conven-img" src="../assets/img/snowflake_icon.png" alt="snowflake_icon">
                     <p>Кондиціонування</p>
                 </div>
 
-                <div class="conven-card">
-                    <img class="conven-img" src="../assets/img/heating_icon.png" alt="heating_icon">
-                    <p>Опалення</p>
-                </div>
                 <div class="conven-card">
                     <img class="conven-img" src="../assets/img/breakfast_icon.png" alt="breakfast_icon">
                     <p>Сніданки</p>
@@ -89,39 +73,33 @@
             </section>
         </main>
 
-        <!-- Компонент Authorization с передачей состояния -->
+        <Footer />
+
         <Authorization :showModal="showModal" @close-modal="closeModal" />
 
-        <footer>
-            <div class="footer-text">
-                <p>Ⓒ 2024 HiveFind, Inc</p>
-                <p>·</p>
-                <a href="#">Конфіденційність</a>
-                <p>·</p>
-                <a href="#">Умови</a>
-            </div>
-        </footer>
     </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import Head from './vue_helpers/Head.vue';
+import Footer from './vue_helpers/footer.vue';
 import Authorization from './Authorization.vue';
 
 export default {
     name: 'Home',
     components: {
-        Authorization
+        Authorization,
+        Head,
+        Footer
     },
     setup() {
-        const showModal = ref(false); // Состояние модального окна
+        const showModal = ref(false);
 
-        // Открытие модального окна
         const openModal = () => {
             showModal.value = true;
         };
 
-        // Закрытие модального окна
         const closeModal = () => {
             showModal.value = false;
         };
@@ -135,7 +113,6 @@ export default {
 };
 </script>
 
-
 <style>
 #carouselExample {
     width: 40%;
@@ -147,12 +124,18 @@ export default {
     height: 100vh;
 }
 
+#header {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 7%;
+}
+
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 15%;
+    height: 20%;
     background-color: #f1f584;
     padding-top: 2%;
     padding-left: 5%;
@@ -162,18 +145,6 @@ header {
     justify-content: center;
     z-index: 1;
     color: black;
-}
-
-#main-name {
-    display: flex;
-    align-items: center;
-    padding-bottom: 3%;
-}
-
-#main-icon {
-    width: 60px;
-    height: 60px;
-    margin-right: 10px;
 }
 
 #search-section {
@@ -201,6 +172,7 @@ header {
     display: grid;
     justify-content: center;
     margin-top: 1%;
+    gap: 30%;
 }
 
 main {
@@ -208,7 +180,22 @@ main {
     padding-top: 80px;
 }
 
+#conv-p {
+    position: absolute;
+    margin-left: 13%;
+    margin-top: 14%;
+}
+
+#conven {
+    display: flex;
+    gap: 2%;
+    justify-content: flex-start;
+    width: 90%;
+}
+
 .conven-card {
+    flex: 1 1 calc(25% - 2%);
+    max-width: 160px;
     box-shadow: 0.0145rem 0.029rem 0.174rem rgba(0, 0, 0, 0.01698),
         0.0335rem 0.067rem 0.402rem rgba(0, 0, 0, 0.024),
         0.0625rem 0.125rem 0.75rem rgba(0, 0, 0, 0.03),
@@ -218,59 +205,37 @@ main {
         0 0 0 0.0625rem rgba(0, 0, 0, 0.015);
     background: whitesmoke;
     border-radius: 0.5rem;
-    padding: 5%;
-    width: 25%;
-    color: black;
+    padding: 50px;
+    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2%;
-    text-wrap: nowrap;
+    text-align: center;
+    color: black;
 }
 
 .conven-img {
-    width: 40px;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
 }
 
-#conv {
-    position: absolute;
-    margin-left: 3%;
-    margin-top: 15%;
+@media (max-width: 768px) {
+    #conven {
+        gap: 5%;
+    }
+
+    .conven-card {
+        flex: 1 1 calc(45% - 5%);
+        /* Для маленьких экранов карточки занимают 45% */
+    }
 }
 
-#conven {
-    gap: 3%;
-    position: absolute;
-    margin-left: 3%;
-    margin-top: 20%;
-}
-
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding-left: 5%;
-    display: grid;
-    gap: 20%;
-    color: whitesmoke;
-    background-color: black;
-
-}
-
-.footer-text {
-    display: flex;
-    gap: 10px;
-    padding-top: 1%;
-}
-
-.footer-text a {
-    color: whitesmoke;
-    text-decoration: none;
-}
-
-.footer-text a:hover {
-    text-decoration: underline;
+@media (max-width: 480px) {
+    .conven-card {
+        flex: 1 1 calc(90%);
+        /* Для узких экранов карточки занимают всю ширину */
+    }
 }
 </style>
