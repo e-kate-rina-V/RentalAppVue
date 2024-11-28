@@ -8,17 +8,17 @@
         <main>
             <div>
                 <h1>Мої оголошення</h1>
-                <div v-if="ads.length === 0">
+
+                <div v-if="isLoading">Загрузка объявлений...</div>
+
+                <div v-else-if="errorMessage">{{ errorMessage }}</div>
+
+                <div v-else-if="ads.length === 0">
                     <p>У вас пока нет объявлений. Создайте новое!</p>
                 </div>
 
-                <div class="ads-grid">
-                    <div v-if="isLoading">Загрузка объявлений...</div>
-                    <div v-else-if="errorMessage">{{ errorMessage }}</div>
-                    <div v-else>
-                        <AdCard v-for="ad in ads" :key="ad.id" :ad="ad" />
-                    </div>
-
+                <div v-else class="ads-grid">
+                    <AdCard v-for="ad in ads" :key="ad.id" :ad="ad" />
                 </div>
             </div>
         </main>
@@ -43,14 +43,15 @@ export default {
     },
     setup() {
         const ads = ref([]);
-
         const isLoading = ref(true);
         const errorMessage = ref('');
 
         const getAds = async () => {
             try {
                 isLoading.value = true;
-                ads.value = await fetchUserAds();
+                const result = await fetchUserAds();
+                console.log('Полученные объявления:', result); 
+                ads.value = result;
             } catch (error) {
                 errorMessage.value = 'Ошибка при загрузке объявлений.';
                 console.error(error);
@@ -59,22 +60,16 @@ export default {
             }
         };
 
+
         onMounted(() => {
             getAds();
         });
 
         return {
             ads,
+            isLoading,
+            errorMessage,
         };
     },
 };
 </script>
-
-<style scoped>
-.ads-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-    padding: 16px;
-}
-</style>

@@ -17,31 +17,6 @@
         <main id="main-body">
             <h1> Бронюйте житло легко !</h1>
 
-            <!-- <div id="carouselExample" class="carousel slide">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img id="carousel-img" src="../assets/img/rose.PNG" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="../assets/img/rose_2.PNG" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="../assets/img/butterfly.PNG" class="d-block w-100" alt="...">
-                    </div>
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div> -->
-
-
             <p id="conv-p"> Зручності для гостей</p>
             <section id="conven" class="d-flex flex-row">
                 <div class="conven-card">
@@ -83,7 +58,7 @@
 <script>
 import { ref } from 'vue';
 import Head from './vue_helpers/Head.vue';
-import Footer from './vue_helpers/footer.vue';
+import Footer from './vue_helpers/Footer.vue';
 import Authorization from './Authorization.vue';
 
 export default {
