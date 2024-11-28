@@ -25,7 +25,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { logoutUser } from '@/api/api.js';
 import Head from './vue_helpers/Head.vue';
-import Footer from './vue_helpers/footer.vue';
+import Footer from './vue_helpers/Footer.vue';
 import Add_ad from './Add_ad.vue';
 
 export default {

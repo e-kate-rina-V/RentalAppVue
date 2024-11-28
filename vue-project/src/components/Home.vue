@@ -103,6 +103,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     margin-left: 7%;
+    z-index: 3;
 }
 
 header {

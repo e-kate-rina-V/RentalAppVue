@@ -6,8 +6,13 @@
         </header>
 
         <div class="ad-details">
-            <div v-if="!ad">
-                Загрузка объявления...
+            <div v-if="!ad" class="d-flex flex-column">
+                <div class="d-flex flex-row; load">
+                    <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                    <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                    <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                </div>
+                <span role="status">Завантаження оголошення...</span>
             </div>
 
             <div v-else>
@@ -39,10 +44,10 @@
                     </button>
                 </div>
 
-                <div class="details">
+                <div class="d-flex flex-column">
                     <h1>{{ ad.title }}</h1>
 
-                    <div class="details-p">
+                    <div class="d-flex flex-row">
                         <p>Гості: {{ ad.guest_count }}</p>
                         <span>·</span>
 
@@ -57,7 +62,7 @@
 
                     <p>Зручності для гостей</p>
 
-                    <section id="conven" class="d-flex flex-row">
+                    <section id="conven" class="conven-grid">
                         <div v-for="(convenience, index) in ad.conveniences" :key="index" class="conven-card">
                             <img v-if="convenience.name === 'shower'" src="../assets/img/shower_icon.png" alt="Shower"
                                 class="conven-img" />
@@ -172,12 +177,42 @@ export default {
     object-fit: cover;
 }
 
-.details {
-    display: grid;
+.d-flex {
+    gap: 10px;
 }
 
-.details-p {
+.conven-grid {
     display: flex;
-    gap: 1%;
+    flex-wrap: wrap;  
+    gap: 16px; 
+    margin-top: 16px;
+}
+
+.conven-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px; 
+    height: 120px; 
+    padding: 8px;
+    border: 1px solid #ddd;  
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.conven-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.conven-img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    object-fit: contain;
 }
 </style>

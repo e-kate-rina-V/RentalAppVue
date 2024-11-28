@@ -137,7 +137,8 @@
                 <div id="choice-form">
                     <h2>Додайте опис вашого приміщення</h2>
                     <div>
-                        <input name="description" type="text" v-model="formData.description">
+                        <textarea id="description-input" name="description" v-model="formData.description"
+                            placeholder="Введіть опис тут..."></textarea>
                     </div>
                     <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
                 </div>
@@ -147,7 +148,8 @@
                 <div id="choice-form">
                     <h2>Додайте титульну назву та адресу</h2>
                     <span>Наприклад: двоповерховий будинок у центрі міста, Київ</span>
-                    <input name="title" type="text" v-model="formData.title">
+                    <textarea id="title-input" name="title" type="text" v-model="formData.title"
+                        placeholder="Введіть титульну назву тут..."></textarea>
                     <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">Далі</button>
                 </div>
             </form>
@@ -200,7 +202,7 @@ export default {
             accomType: "",
             guestCount: 1,
             price: null,
-            conveniences: [], 
+            conveniences: [],
             materials: [],
         });
 
@@ -222,7 +224,7 @@ export default {
 
         const selectGuestCount = (count) => {
             formData.guestCount = count;
-            currentStep.value++; 
+            currentStep.value++;
         };
 
         const selectMode = (mode) => {
@@ -439,5 +441,27 @@ export default {
 
 #cont-btn {
     margin-top: 3%;
+}
+
+#description-input,
+#title-input {
+    width: 520px;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    resize: none;
+    outline: none;
+}
+
+#description-input:focus {
+    border-color: grey;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+#description-input::placeholder {
+    color: #aaa;
 }
 </style>

@@ -24,7 +24,7 @@
 import { useRouter } from 'vue-router';
 import { logoutUser } from '@/api/api.js';
 import Head from './vue_helpers/Head.vue';
-import Footer from './vue_helpers/footer.vue';
+import Footer from './vue_helpers/Footer.vue';
 
 export default {
     name: 'MainRenter',
