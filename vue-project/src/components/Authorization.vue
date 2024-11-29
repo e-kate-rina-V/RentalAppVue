@@ -96,7 +96,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { registerUser, loginUser } from "../api/api.js";
-import { validateName, validateEmail, validatePassword } from "../validation/validation.js";
+import { validateName, validateEmail, validatePassword } from "../validation/auth_validation.js";
 
 export default {
   name: "Authorization",

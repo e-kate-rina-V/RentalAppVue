@@ -66,21 +66,32 @@ export const registerAd = async (formData) => {
 
 export const fetchUserAds = async () => {
     try {
-        const response = await api.get('/ads'); 
-        return response.data;                  
+        const response = await api.get('/ads');
+        return response.data;
     } catch (error) {
         console.error('Ошибка при загрузке объявлений:', error);
-        throw error;                           
+        throw error;
     }
 };
 
 export const fetchAdById = async (id) => {
     try {
-        const response = await api.get(`/ads/${id}`); 
+        const response = await api.get(`/ads/${id}`);
         return response.data;
     } catch (error) {
         console.error('Ошибка при загрузке объявления:', error);
         throw error;
     }
 };
+
+export const fetchAllAds = async () => {
+    try {
+        const response = await api.get('/all_ads');
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка при загрузке объявлений:', error);
+        throw error;
+    }
+};
+
 
