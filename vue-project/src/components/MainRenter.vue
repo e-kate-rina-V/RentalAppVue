@@ -115,9 +115,8 @@
                 placeholder="Введіть кількість гостей"
               />
             </div>
-
             <div class="list-group-item">
-              <label>Удобства:</label>
+              <h6>Базові зручності</h6>
               <div class="form-check">
                 <input
                   type="checkbox"
@@ -131,10 +130,87 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
+                  id="kitchen"
+                  v-model="filters.conveniences.kitchen"
+                />
+                <label class="form-check-label" for="kitchen">Кухня</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="shower"
+                  v-model="filters.conveniences.shower"
+                />
+                <label class="form-check-label" for="shower">Душ</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="washing-machine"
+                  v-model="filters.conveniences.washing_machine"
+                />
+                <label class="form-check-label" for="washing-machine"
+                  >Пральна машина</label
+                >
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="conditioner"
+                  v-model="filters.conveniences.conditioner"
+                />
+                <label class="form-check-label" for="conditioner">Кондиціонер</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="heating"
+                  v-model="filters.conveniences.heating"
+                />
+                <label class="form-check-label" for="heating">Опалення</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="work-place"
+                  v-model="filters.conveniences.work_place"
+                />
+                <label class="form-check-label" for="work-place">Робоче місце</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="television"
+                  v-model="filters.conveniences.television"
+                />
+                <label class="form-check-label" for="television">Телевізор</label>
+              </div>
+            </div>
+            <div class="list-group-item">
+              <h6>Особливі зручності</h6>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
                   id="parking"
                   v-model="filters.conveniences.parking"
                 />
                 <label class="form-check-label" for="parking">Паркування</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="breakfast"
+                  v-model="filters.conveniences.breakfast"
+                />
+                <label class="form-check-label" for="breakfast">Сніданок</label>
               </div>
               <div class="form-check">
                 <input
@@ -146,7 +222,31 @@
                 <label class="form-check-label" for="pets">Можна з тваринами</label>
               </div>
             </div>
+            <div class="list-group-item">
+              <h6>Безпека</h6>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="medicine-chest"
+                  v-model="filters.conveniences.medicine_chest"
+                />
+                <label class="form-check-label" for="medicine-chest">Аптечка</label>
+              </div>
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="fire-extinguisher"
+                  v-model="filters.conveniences.fire_extinguisher"
+                />
+                <label class="form-check-label" for="fire-extinguisher"
+                  >Вогнегасник</label
+                >
+              </div>
+            </div>
           </div>
+
           <section id="search-section">
             <input
               type="search"
@@ -203,11 +303,7 @@ export default {
       accomType: "",
       priceRange: 10000,
       guestCount: "",
-      conveniences: {
-        wifi: false,
-        parking: false,
-        pets: false,
-      },
+      conveniences: {},
     });
 
     const sortOption = ref(null);
@@ -398,6 +494,12 @@ export default {
 
 .ad-card-wrapper {
   max-width: 400px;
+}
+
+.form-check input {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 18px;
+  height: 18px;
 }
 
 #exit-btn {
