@@ -129,24 +129,6 @@ header {
   color: black;
 }
 
-/* #search-section {
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 10px;
-}
-
-#search {
-  height: 30px;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-#search-sign {
-  width: 30px;
-  height: 30px;
-} */
-
 #main-body {
   position: absolute;
   left: 0;
@@ -162,11 +144,9 @@ main {
   padding-top: 80px;
 }
 
-#conv-p {
-  position: absolute;
-  margin-left: 13%;
-  margin-top: 14%;
-}
+/* #conv-p {
+  margin-bottom: -10%;
+} */
 
 #conven {
   display: flex;
@@ -209,14 +189,12 @@ main {
 
   .conven-card {
     flex: 1 1 calc(45% - 5%);
-    /* Для маленьких экранов карточки занимают 45% */
   }
 }
 
 @media (max-width: 480px) {
   .conven-card {
     flex: 1 1 calc(90%);
-    /* Для узких экранов карточки занимают всю ширину */
   }
 }
 </style>

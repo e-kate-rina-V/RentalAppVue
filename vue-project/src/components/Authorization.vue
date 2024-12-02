@@ -2,19 +2,46 @@
   <div>
     <div v-if="showModal" class="modal">
       <div class="card-choice">
-        <form v-if="!showForm && !isLoginMode" class="modal-content" @submit.prevent="selectRole">
+        <form
+          v-if="!showForm && !isLoginMode"
+          class="modal-content"
+          @submit.prevent="selectRole"
+        >
           <div id="choice-form">
-            <h2>Оберіть роль</h2>
+            <div class="container text-center">
+              <div class="d-flex justify-content-around">
+                <button
+                  type="button"
+                  class="btn-close"
+                  aria-label="Close"
+                  @click="closeModal"
+                ></button>
+              </div>
+              <h2>Оберіть роль</h2>
+            </div>
+
             <div class="btn-gr" role="group">
-              <div class="role-btn">
-                <img class="conven-img" src="../assets/img/renter_icon.png" alt="renter_icon" />
+              <div class="d-flex flex-column align-items-center; role-btn">
+                <img
+                  class="conven-img"
+                  src="../assets/img/renter_icon.png"
+                  alt="renter_icon"
+                />
                 <button class="btn btn-dark" type="button" @click="selectRole('renter')">
                   Орендатор
                 </button>
               </div>
-              <div class="role-btn">
-                <img class="conven-img" src="../assets/img/landlord_icon.png" alt="landlord_icon" />
-                <button class="btn btn-dark" type="button" @click="selectRole('landlord')">
+              <div class="d-flex flex-column align-items-center; role-btn">
+                <img
+                  class="conven-img"
+                  src="../assets/img/landlord_icon.png"
+                  alt="landlord_icon"
+                />
+                <button
+                  class="btn btn-dark"
+                  type="button"
+                  @click="selectRole('landlord')"
+                >
                   Орендодавець
                 </button>
               </div>
@@ -23,31 +50,65 @@
           </div>
         </form>
 
-        <form v-if="showForm && !isLoginMode" id="register-form" class="card" @submit.prevent="submitRegistrationForm">
+        <form
+          v-if="showForm && !isLoginMode"
+          id="register-form"
+          class="card"
+          @submit.prevent="submitRegistrationForm"
+        >
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            @click="closeModal"
+          ></button>
           <h2>Registration</h2>
           <p>Your choice: {{ role }}</p>
           <div>
             <label for="name">Name:</label>
-            <input class="form-control" type="text" id="name" v-model="formData.name" required />
+            <input
+              class="form-control"
+              type="text"
+              id="name"
+              v-model="formData.name"
+              required
+            />
             <span v-if="validationErrors.name" class="error">{{
               validationErrors.name[0]
             }}</span>
 
             <label for="email">Email:</label>
-            <input class="form-control" type="email" id="email" v-model="formData.email" required />
+            <input
+              class="form-control"
+              type="email"
+              id="email"
+              v-model="formData.email"
+              required
+            />
             <span v-if="validationErrors.email" class="error">{{
               validationErrors.email[0]
             }}</span>
 
             <label for="password">Password:</label>
-            <input class="form-control" type="password" id="password" v-model="formData.password" required />
+            <input
+              class="form-control"
+              type="password"
+              id="password"
+              v-model="formData.password"
+              required
+            />
             <span v-if="validationErrors.password" class="error">{{
               validationErrors.password[0]
             }}</span>
 
             <label for="confirm_password">Confirm password:</label>
-            <input class="form-control" type="password" id="confirm_password" v-model="formData.password_confirmation"
-              required />
+            <input
+              class="form-control"
+              type="password"
+              id="confirm_password"
+              v-model="formData.password_confirmation"
+              required
+            />
             <span v-if="validationErrors.password_confirmation" class="error">{{
               validationErrors.password_confirmation[0]
             }}</span>
@@ -62,17 +123,40 @@
           <p @click="switchMode" class="switch-mode">I already have an account</p>
         </form>
 
-        <form v-if="isLoginMode" id="login-form" class="card" @submit.prevent="submitLoginForm">
+        <form
+          v-if="isLoginMode"
+          id="login-form"
+          class="card"
+          @submit.prevent="submitLoginForm"
+        >
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            @click="closeModal"
+          ></button>
           <h2>Authorization</h2>
           <div>
             <label for="email">Email:</label>
-            <input class="form-control" type="email" id="email" v-model="loginData.email" required />
+            <input
+              class="form-control"
+              type="email"
+              id="email"
+              v-model="loginData.email"
+              required
+            />
             <span v-if="validationErrors.email" class="error">{{
               validationErrors.email[0]
             }}</span>
 
             <label for="password">Password:</label>
-            <input class="form-control" type="password" id="password" v-model="loginData.password" required />
+            <input
+              class="form-control"
+              type="password"
+              id="password"
+              v-model="loginData.password"
+              required
+            />
 
             <span v-if="validationErrors.auth" class="error">{{
               validationErrors.auth[0]
@@ -96,7 +180,11 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { registerUser, loginUser } from "../api/api.js";
-import { validateName, validateEmail, validatePassword } from "../validation/auth_validation.js";
+import {
+  validateName,
+  validateEmail,
+  validatePassword,
+} from "../validation/auth_validation.js";
 
 export default {
   name: "Authorization",
@@ -119,11 +207,10 @@ export default {
 
     const loginData = ref({
       email: "",
-      password: ""
+      password: "",
     });
 
     const validationErrors = ref({});
-
 
     const resetForm = () => {
       formData.value = {
@@ -139,7 +226,6 @@ export default {
       };
       validationErrors.value = {};
     };
-
 
     const closeModal = () => {
       resetForm();
@@ -186,17 +272,17 @@ export default {
       try {
         const response = await registerUser(formData.value);
 
-        console.log('Registration response:', response);
+        console.log("Registration response:", response);
 
         if (response && response.user) {
-          alert('Registration was successful');
-          router.push('/home');
+          alert("Registration was successful");
+          router.push("/home");
           closeModal();
         } else {
-          throw new Error('User data not found in response');
+          throw new Error("User data not found in response");
         }
       } catch (error) {
-        console.error('Error during registration:', error);
+        console.error("Error during registration:", error);
         handleValidationErrors(error);
       }
     };
@@ -234,16 +320,16 @@ export default {
 
         closeModal();
       } catch (error) {
-
         if (error.response && error.response.data && error.response.data.error) {
           validationErrors.value.auth = [error.response.data.error];
         } else {
           console.error("Error:", error.message || error);
-          validationErrors.value.auth = ["An unexpected error occurred. Please try again later."];
+          validationErrors.value.auth = [
+            "An unexpected error occurred. Please try again later.",
+          ];
         }
       }
     };
-
 
     return {
       showForm,
@@ -313,8 +399,6 @@ export default {
 }
 
 .role-btn {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

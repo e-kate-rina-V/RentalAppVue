@@ -19,57 +19,70 @@
       </div>
 
       <div v-else>
-        <div
-          v-if="ad.materials && ad.materials.length > 0"
-          id="adCarousel"
-          class="carousel slide"
-          data-bs-ride="carousel"
-        >
-          <div class="carousel-indicators">
-            <button
-              v-for="(material, index) in ad.materials"
-              :key="'indicator-' + index"
-              :data-bs-target="'#adCarousel'"
-              :data-bs-slide-to="index"
-              :class="{ active: index === 0 }"
-              aria-label="'Slide ' + (index + 1)"
-            ></button>
-          </div>
-
-          <div class="carousel-inner">
+        <div class="d-flex flex-row">
+          <section>
             <div
-              v-for="(material, index) in ad.materials"
-              :key="'slide-' + index"
-              :class="['carousel-item', { active: index === 0 }]"
+              v-if="ad.materials && ad.materials.length > 0"
+              id="adCarousel"
+              class="carousel slide"
+              data-bs-ride="carousel"
             >
-              <img
-                :src="`http://localhost:8080/storage/${material.source}`"
-                :alt="'Image ' + (index + 1)"
-                class="d-block w-100 ad-details-img"
-              />
-            </div>
-          </div>
+              <div class="carousel-indicators">
+                <button
+                  v-for="(material, index) in ad.materials"
+                  :key="'indicator-' + index"
+                  :data-bs-target="'#adCarousel'"
+                  :data-bs-slide-to="index"
+                  :class="{ active: index === 0 }"
+                  aria-label="'Slide ' + (index + 1)"
+                ></button>
+              </div>
 
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#adCarousel"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#adCarousel"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+              <div class="carousel-inner">
+                <div
+                  v-for="(material, index) in ad.materials"
+                  :key="'slide-' + index"
+                  :class="['carousel-item', { active: index === 0 }]"
+                >
+                  <img
+                    :src="`http://localhost:8080/storage/${material.source}`"
+                    :alt="'Image ' + (index + 1)"
+                    class="d-block w-100 ad-details-img"
+                  />
+                </div>
+              </div>
+
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#adCarousel"
+                data-bs-slide="prev"
+              >
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#adCarousel"
+                data-bs-slide="next"
+              >
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+            <p v-else>Зображення для цього оголошення відсутні</p>
+          </section>
+
+          <section>
+            <div id="reserv-btn" class="d-flex flex-column">
+              <button @click="openModal" type="button" class="btn btn-dark">
+                Забронювати
+              </button>
+              <button type="button" class="btn btn-warning">Залишити відгук</button>
+            </div>
+          </section>
         </div>
-        <p v-else>Зображення для цього оголошення відсутні</p>
 
         <div class="d-flex flex-column">
           <h1 v-if="ad.title">{{ ad.title }}</h1>
@@ -176,49 +189,52 @@
                 class="conven-img"
               />
               <div v-if="convenience.name === 'shower'">
-                <p>Shower</p>
+                <p>Душ</p>
               </div>
               <div v-else-if="convenience.name === 'wifi'">
                 <p>Wi-Fi</p>
               </div>
               <div v-else-if="convenience.name === 'kitchen'">
-                <p>Kitchen</p>
+                <p>Кухня</p>
               </div>
               <div v-else-if="convenience.name === 'television'">
-                <p>Television</p>
+                <p>Телевізор</p>
               </div>
               <div v-else-if="convenience.name === 'pets'">
-                <p>Pets friendly</p>
+                <p>Можна з тваринами</p>
               </div>
               <div v-else-if="convenience.name === 'work_place'">
-                <p>Work place</p>
+                <p>Робоче місце</p>
               </div>
               <div v-else-if="convenience.name === 'conditioner'">
-                <p>Air conditioning</p>
+                <p>Кондиціонер</p>
               </div>
               <div v-else-if="convenience.name === 'heating'">
-                <p>Heating</p>
+                <p>Опалення</p>
               </div>
               <div v-else-if="convenience.name === 'parking'">
-                <p>Parking</p>
+                <p>Паркування</p>
               </div>
               <div v-else-if="convenience.name === 'breakfast'">
-                <p>Breakfast</p>
+                <p>Сніданок</p>
               </div>
               <div v-else-if="convenience.name === 'washing_machine'">
-                <p>Washing machine</p>
+                <p>Пральна машина</p>
               </div>
-              <div v-else-if="convenience.name === ''">
-                <p></p>
+              <div v-else-if="convenience.name === 'medicine_chest'">
+                <p>Аптечка</p>
               </div>
-              <div v-else-if="convenience.name === ''">
-                <p></p>
+              <div v-else-if="convenience.name === 'fire_extinguisher'">
+                <p>Вогнегасник</p>
               </div>
             </div>
           </section>
         </div>
       </div>
     </div>
+    <Footer />
+
+    <Reservation :showModal="showModal" :ad="ad" @close-modal="closeModal" />
   </div>
 </template>
 
@@ -227,13 +243,15 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { fetchAdById } from "@/api/api.js";
 import Head from "./vue_helpers/Head.vue";
-// import Footer from './vue_helpers/footer.vue';
+import Footer from "./vue_helpers/Footer.vue";
+import Reservation from "./Reservation.vue";
 
 export default {
   name: "AdDetails",
   components: {
     Head,
-    // Footer,
+    Footer,
+    Reservation,
   },
   setup() {
     const route = useRoute();
@@ -274,16 +292,34 @@ export default {
       getAdDetails();
     });
 
+    const showModal = ref(false);
+
+    const openModal = () => {
+      showModal.value = true;
+    };
+
+    const closeModal = () => {
+      showModal.value = false;
+    };
+
     return {
       ad,
       getPremTypeLabel,
       getAccomTypeLabel,
+      showModal,
+      openModal,
+      closeModal,
     };
   },
 };
 </script>
 
 <style scoped>
+#reserv-btn {
+  padding-left: 100%;
+  width: 250%;
+  gap: 18px;
+}
 .ad-details {
   padding: 16px;
   max-width: 800px;
@@ -299,6 +335,10 @@ export default {
 
 .d-flex {
   gap: 10px;
+}
+
+#conven {
+  position: relative;
 }
 
 .conven-card {
