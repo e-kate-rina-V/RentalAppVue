@@ -1,15 +1,10 @@
 <template>
   <div v-if="showModal" class="modal">
-    <form class="reserv-form">
+    <form class="reserv-form" @submit.prevent="submitReservation">
       <div class="container text-start">
         <div class="d-flex flex-row">
           <h3 v-if="ad">₴ {{ ad.price }} ніч</h3>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            @click="closeModal"
-          ></button>
+          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
         </div>
 
         <div class="date-picker">
@@ -32,19 +27,11 @@
               <h6>Дорослі</h6>
               <p>Вік: від 13 років</p>
               <div id="guest_controls" class="d-flex flex-row">
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestAdultCount', 'decrease')"
-                >
+                <button class="guest-btn" type="button" @click="changeGuestCount('guestAdultCount', 'decrease')">
                   −
                 </button>
                 <span class="guest-value">{{ formData.guestAdultCount }}</span>
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestAdultCount', 'increase')"
-                >
+                <button class="guest-btn" type="button" @click="changeGuestCount('guestAdultCount', 'increase')">
                   +
                 </button>
               </div>
@@ -53,19 +40,11 @@
               <h6>Діти</h6>
               <p>Вік: від 2 до 12 років</p>
               <div id="guest_controls" class="d-flex align-items-center">
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestChildrenCount', 'decrease')"
-                >
+                <button class="guest-btn" type="button" @click="changeGuestCount('guestChildrenCount', 'decrease')">
                   −
                 </button>
                 <span class="guest-value">{{ formData.guestChildrenCount }}</span>
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestChildrenCount', 'increase')"
-                >
+                <button class="guest-btn" type="button" @click="changeGuestCount('guestChildrenCount', 'increase')">
                   +
                 </button>
               </div>
@@ -74,41 +53,31 @@
               <h6>Немовля</h6>
               <p>Вік: до 2 років</p>
               <div id="guest_controls" class="d-flex align-items-center">
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestBabyCount', 'decrease')"
-                >
+                <button class="guest-btn" type="button" @click="changeGuestCount('guestBabyCount', 'decrease')">
                   −
                 </button>
                 <span class="guest-value">{{ formData.guestBabyCount }}</span>
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestBabyCount', 'increase')"
-                >
+                <button class="guest-btn" type="button" @click="changeGuestCount('guestBabyCount', 'increase')">
                   +
                 </button>
               </div>
             </section>
             <section>
               <h6>Домашні тварини</h6>
-              <div id="guest_controls" class="d-flex align-items-center">
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestPets', 'decrease')"
-                >
-                  −
-                </button>
-                <span class="guest-value">{{ formData.guestPets }}</span>
-                <button
-                  class="guest-btn"
-                  type="button"
-                  @click="changeGuestCount('guestPets', 'increase')"
-                >
-                  +
-                </button>
+              <div v-if="ad.conveniences && ad.conveniences.some(c => c.name === 'pets')">
+                <div id="guest_controls" class="d-flex align-items-center">
+                  <button class="guest-btn" type="button" @click="changeGuestCount('guestPets', 'decrease')"
+                    :disabled="formData.guestPets === 0">
+                    −
+                  </button>
+                  <span class="guest-value">{{ formData.guestPets }}</span>
+                  <button class="guest-btn" type="button" @click="changeGuestCount('guestPets', 'increase')">
+                    +
+                  </button>
+                </div>
+              </div>
+              <div v-else>
+                <p>Домашні тварини не дозволені</p>
               </div>
             </section>
           </div>
@@ -119,7 +88,7 @@
             ₴ {{ ad.price }} ніч x {{ calculateNights }} ночей = {{ totalCost }}₴
           </h3>
         </div>
-        <button type="button" class="btn btn-primary" @click="bookAd">Забронювати</button>
+        <button type="submit" class="btn btn-primary">Забронювати</button>
       </div>
     </form>
   </div>
@@ -129,8 +98,10 @@
 import { reactive, computed, ref, watch } from "vue";
 import flatpickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
+import { reserveAd } from "@/api/api.js";
 
 export default {
+  name: "Reservation",
   components: { flatpickr },
   props: {
     ad: {
@@ -180,17 +151,44 @@ export default {
     const changeGuestCount = (guestType, action) => {
       if (action === "increase") {
         formData[guestType]++;
-      } else if (action === "decrease" && formData[guestType] > 0) {
-        formData[guestType]--;
+      } else if (action === "decrease") {
+        if (guestType === "guestAdultCount" && formData[guestType] === 1) return; 
+        if (formData[guestType] > 0) formData[guestType]--;
       }
     };
+
 
     const closeModal = () => {
       emit("close-modal");
     };
 
-    const bookAd = () => {
-      console.log(`Бронирование успешно: ${totalCost.value}₴`);
+    const submitReservation = async () => {
+
+      if (!formData.arrival_date || !formData.depart_date || formData.nights_num <= 0) {
+        alert("Пожалуйста, выберите корректные даты.");
+        return;
+    }
+
+      const payload = {
+        arrival_date: formData.arrival_date,
+        depart_date: formData.depart_date,
+        nights_num: formData.nights_num,
+        guestAdultCount: formData.guestAdultCount,
+        guestChildrenCount: formData.guestChildrenCount,
+        guestBabyCount: formData.guestBabyCount,
+        guestPets: formData.guestPets,
+        ad_id: props.ad.id,
+        total_cost: totalCost.value
+      };
+      try {
+        const response = await reserveAd(payload);
+        console.log("Reservation success:", response.data);
+        closeModal();
+        alert("Бронирование успешно создано!");
+      } catch (error) {
+        console.error("Reservation failed:", error);
+        alert("Не удалось создать бронирование. Попробуйте еще раз.");
+      }
     };
 
     return {
@@ -199,7 +197,7 @@ export default {
       totalCost,
       closeModal,
       changeGuestCount,
-      bookAd,
+      submitReservation,
     };
   },
 };
@@ -218,7 +216,8 @@ export default {
   margin-top: 2%;
 }
 
-.reserv-form {
+.reserv-form,
+.review-form {
   background: #fff;
   padding: 20px;
   border-radius: 5px;

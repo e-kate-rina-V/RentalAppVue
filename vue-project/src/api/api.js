@@ -94,4 +94,56 @@ export const fetchAllAds = async () => {
     }
 };
 
+export const reserveAd = async (formData) => {
+    try {
+        const response = await api.post('reservation', formData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response ? error.response.data : error;
+    }
+};
+
+export const startChat = async (adId) => {
+    try {
+        const response = await axios.post('http://localhost:8080/chats', { ad_id: adId });
+        return response.data; 
+    } catch (error) {
+        console.error('Ошибка при создании чата:', error);
+        throw error;
+    }
+};
+
+
+export const fetchMessages = async (chatId) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/chats/${chatId}/messages`);
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка при загрузке сообщений:', error);
+        throw error;
+    }
+};
+
+export const sendMessageToChat = async (chatId, message) => {
+    try {
+        const response = await api.post(`/chats/${chatId}/messages`, { content: message }, {
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Ошибка при отправке сообщения:', error);
+        throw error;
+    }
+};
+
+
+
+
+
+
 

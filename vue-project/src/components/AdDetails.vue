@@ -1,6 +1,7 @@
 <template>
   <div class="page-container">
     <header id="header">
+
       <Head />
     </header>
 
@@ -21,52 +22,27 @@
       <div v-else>
         <div class="d-flex flex-row">
           <section>
-            <div
-              v-if="ad.materials && ad.materials.length > 0"
-              id="adCarousel"
-              class="carousel slide"
-              data-bs-ride="carousel"
-            >
+            <div v-if="ad.materials && ad.materials.length > 0" id="adCarousel" class="carousel slide"
+              data-bs-ride="carousel">
               <div class="carousel-indicators">
-                <button
-                  v-for="(material, index) in ad.materials"
-                  :key="'indicator-' + index"
-                  :data-bs-target="'#adCarousel'"
-                  :data-bs-slide-to="index"
-                  :class="{ active: index === 0 }"
-                  aria-label="'Slide ' + (index + 1)"
-                ></button>
+                <button v-for="(material, index) in ad.materials" :key="'indicator-' + index"
+                  :data-bs-target="'#adCarousel'" :data-bs-slide-to="index" :class="{ active: index === 0 }"
+                  aria-label="'Slide ' + (index + 1)"></button>
               </div>
 
               <div class="carousel-inner">
-                <div
-                  v-for="(material, index) in ad.materials"
-                  :key="'slide-' + index"
-                  :class="['carousel-item', { active: index === 0 }]"
-                >
-                  <img
-                    :src="`http://localhost:8080/storage/${material.source}`"
-                    :alt="'Image ' + (index + 1)"
-                    class="d-block w-100 ad-details-img"
-                  />
+                <div v-for="(material, index) in ad.materials" :key="'slide-' + index"
+                  :class="['carousel-item', { active: index === 0 }]">
+                  <img :src="`http://localhost:8080/storage/${material.source}`" :alt="'Image ' + (index + 1)"
+                    class="d-block w-100 ad-details-img" />
                 </div>
               </div>
 
-              <button
-                class="carousel-control-prev"
-                type="button"
-                data-bs-target="#adCarousel"
-                data-bs-slide="prev"
-              >
+              <button class="carousel-control-prev" type="button" data-bs-target="#adCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button
-                class="carousel-control-next"
-                type="button"
-                data-bs-target="#adCarousel"
-                data-bs-slide="next"
-              >
+              <button class="carousel-control-next" type="button" data-bs-target="#adCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
@@ -79,7 +55,12 @@
               <button @click="openModal" type="button" class="btn btn-dark">
                 Забронювати
               </button>
-              <button type="button" class="btn btn-warning">Залишити відгук</button>
+              <button @click="openModalReview" type="button" class="btn btn-warning">
+                Залишити відгук
+              </button>
+              <button @click="openChat" type="button" class="btn btn-success">
+                Розпочати чат
+              </button>
             </div>
           </section>
         </div>
@@ -105,89 +86,33 @@
           <p>Зручності для гостей</p>
 
           <section id="conven" class="conven-grid">
-            <div
-              v-for="(convenience, index) in ad.conveniences"
-              :key="index"
-              class="conven-card"
-            >
-              <img
-                v-if="convenience.name === 'shower'"
-                src="../assets/img/shower_icon.png"
-                alt="Shower"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'wifi'"
-                src="../assets/img/wifi_icon.png"
-                alt="Wi-Fi"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'kitchen'"
-                src="../assets/img/cutlery_icon.png"
-                alt="kitchen"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'pets'"
-                src="../assets/img/paw_icon.png"
-                alt="pets allowed"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'conditioner'"
-                src="../assets/img/snowflake_icon.png"
-                alt="air conditioning"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'breakfast'"
-                src="../assets/img/breakfast_icon.png"
-                alt="breakfast"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'heating'"
-                src="../assets/img/heating_icon.png"
-                alt="heating"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'television'"
-                src="../assets/img/television_icon.png"
-                alt="television"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'work_place'"
-                src="../assets/img/laptop_icon.png"
-                alt="work place"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'parking'"
-                src="../assets/img/parking_icon.png"
-                alt="parking"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'washing_machine'"
-                src="../assets/img/washing_machine_icon.png"
-                alt="washing machine"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'medicine_chest'"
-                src="../assets/img/medicine_chest_icon.png"
-                alt="medicine chest"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'fire_extinguisher'"
-                src="../assets/img/fire_extinguisher_icon.png"
-                alt="fire extinguisher"
-                class="conven-img"
-              />
+            <div v-for="(convenience, index) in ad.conveniences" :key="index" class="conven-card">
+              <img v-if="convenience.name === 'shower'" src="../assets/img/shower_icon.png" alt="Shower"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'wifi'" src="../assets/img/wifi_icon.png" alt="Wi-Fi"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'kitchen'" src="../assets/img/cutlery_icon.png" alt="kitchen"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'pets'" src="../assets/img/paw_icon.png" alt="pets allowed"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'conditioner'" src="../assets/img/snowflake_icon.png"
+                alt="air conditioning" class="conven-img" />
+              <img v-else-if="convenience.name === 'breakfast'" src="../assets/img/breakfast_icon.png" alt="breakfast"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'heating'" src="../assets/img/heating_icon.png" alt="heating"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'television'" src="../assets/img/television_icon.png"
+                alt="television" class="conven-img" />
+              <img v-else-if="convenience.name === 'work_place'" src="../assets/img/laptop_icon.png" alt="work place"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'parking'" src="../assets/img/parking_icon.png" alt="parking"
+                class="conven-img" />
+              <img v-else-if="convenience.name === 'washing_machine'" src="../assets/img/washing_machine_icon.png"
+                alt="washing machine" class="conven-img" />
+              <img v-else-if="convenience.name === 'medicine_chest'" src="../assets/img/medicine_chest_icon.png"
+                alt="medicine chest" class="conven-img" />
+              <img v-else-if="convenience.name === 'fire_extinguisher'" src="../assets/img/fire_extinguisher_icon.png"
+                alt="fire extinguisher" class="conven-img" />
               <div v-if="convenience.name === 'shower'">
                 <p>Душ</p>
               </div>
@@ -235,16 +160,18 @@
     <Footer />
 
     <Reservation :showModal="showModal" :ad="ad" @close-modal="closeModal" />
+
+    <Review :showModalReview="showModalReview" :ad="ad" @close-modal="closeModalReview" />
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { fetchAdById } from "@/api/api.js";
+<script>import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router"; // Импортируем useRouter
+import { fetchAdById, startChat } from "@/api/api.js";
 import Head from "./vue_helpers/Head.vue";
 import Footer from "./vue_helpers/Footer.vue";
 import Reservation from "./Reservation.vue";
+import Review from "./Review.vue";
 
 export default {
   name: "AdDetails",
@@ -252,10 +179,14 @@ export default {
     Head,
     Footer,
     Reservation,
+    Review,
   },
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const ad = ref(null);
+
+    const chatId = route.params.id;
 
     const adPremTypes = [
       { value: "hotel_room", label: "Кімната у готелі" },
@@ -292,23 +223,52 @@ export default {
       getAdDetails();
     });
 
+    const openChat = async () => {
+      try {
+        const chat = await startChat(ad.value.id);
+        console.log('Чат создан:', chat);
+        if (chat && chat.id) {
+          router.push(`/chat/${chat.id}`);
+        } else {
+          console.error('Ошибка: чат не был создан');
+        }
+      } catch (error) {
+        console.error('Не удалось создать чат:', error);
+      }
+    };
+
+
     const showModal = ref(false);
+
+    const showModalReview = ref(false);
 
     const openModal = () => {
       showModal.value = true;
+    };
+
+    const openModalReview = () => {
+      showModalReview.value = true;
     };
 
     const closeModal = () => {
       showModal.value = false;
     };
 
+    const closeModalReview = () => {
+      showModalReview.value = false;
+    };
+
     return {
       ad,
       getPremTypeLabel,
       getAccomTypeLabel,
+      openChat,
       showModal,
+      showModalReview,
       openModal,
       closeModal,
+      openModalReview,
+      closeModalReview,
     };
   },
 };
@@ -320,6 +280,7 @@ export default {
   width: 250%;
   gap: 18px;
 }
+
 .ad-details {
   padding: 16px;
   max-width: 800px;

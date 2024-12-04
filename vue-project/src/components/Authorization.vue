@@ -300,7 +300,6 @@ export default {
         validationErrors.value.email = ["Please enter a valid email address"];
         return;
       }
-
       try {
         const response = await loginUser(loginData.value);
 
