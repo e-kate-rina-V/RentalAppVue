@@ -21,6 +21,7 @@ footer {
   gap: 20%;
   color: whitesmoke;
   background-color: black;
+  z-index: 2;
 }
 
 #footer-text {

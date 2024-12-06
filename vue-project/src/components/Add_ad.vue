@@ -95,6 +95,10 @@
               <button class="guest-btn" type="button" @click="increase">+</button>
             </div>
           </div>
+          <div v-if="errors[currentStep]" class="error-message">
+            {{ errors[currentStep] }}
+          </div>
+
           <button
             id="cont-btn"
             class="btn btn-dark"
@@ -280,6 +284,10 @@
               <p>Вогнегасник</p>
             </button>
           </section>
+          <div v-if="errors[currentStep]" class="error-message">
+            {{ errors[currentStep] }}
+          </div>
+
           <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">
             Далі
           </button>
@@ -303,6 +311,10 @@
               placeholder="Введіть опис тут..."
             ></textarea>
           </div>
+          <div v-if="errors[currentStep]" class="error-message">
+            {{ errors[currentStep] }}
+          </div>
+
           <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">
             Далі
           </button>
@@ -326,6 +338,10 @@
             v-model="formData.title"
             placeholder="Введіть титульну назву тут..."
           ></textarea>
+          <div v-if="errors[currentStep]" class="error-message">
+            {{ errors[currentStep] }}
+          </div>
+
           <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">
             Далі
           </button>
@@ -344,6 +360,10 @@
           <div>
             <input name="price" type="number" min="1" v-model="formData.price" />
           </div>
+          <div v-if="errors[currentStep]" class="error-message">
+            {{ errors[currentStep] }}
+          </div>
+
           <button id="cont-btn" class="btn btn-dark" type="button" @click="nextStep">
             Далі
           </button>
@@ -365,6 +385,9 @@
             </div>
             <span>(не менше 2-х)</span>
           </div>
+          <div v-if="errors[currentStep]" class="error-message">
+            {{ errors[currentStep] }}
+          </div>
           <button id="cont-btn" class="btn btn-dark" type="button" @click="submitForm">
             Завершити
           </button>
@@ -377,6 +400,16 @@
 <script>
 import { ref, reactive } from "vue";
 import { registerAd } from "@/api/api.js";
+import {
+  validateAccommodationType,
+  validateAccommodationMode,
+  validateGuestCount,
+  validateConveniences,
+  validateDescription,
+  validateTitle,
+  validatePrice,
+  validateFiles,
+} from "../validation/ad_validation.js";
 
 export default {
   props: {
@@ -388,6 +421,7 @@ export default {
   emits: ["close-modal"],
   setup(_, { emit }) {
     const currentStep = ref(1);
+    const errors = reactive({});
 
     const closeModal = () => {
       emit("close-modal");
@@ -404,35 +438,59 @@ export default {
       materials: [],
     });
 
-    const decrease = () => {
-      if (formData.guestCount > 1) {
-        formData.guestCount--;
+    const validateCurrentStep = () => {
+      let error = null;
+      switch (currentStep.value) {
+        case 1:
+          error = validateAccommodationMode(formData.premType);
+          break;
+        case 2:
+          error = validateAccommodationType(formData.accomType);
+          break;
+        case 3:
+          error = validateGuestCount(formData.guestCount);
+          break;
+        case 4:
+          error = validateConveniences(formData.conveniences);
+          break;
+        case 5:
+          error = validateDescription(formData.description);
+          break;
+        case 6:
+          error = validateTitle(formData.title);
+          break;
+        case 7:
+          error = validatePrice(formData.price);
+          break;
+        case 8:
+          error = validateFiles(formData.materials);
+          break;
+        default:
+          error = null;
       }
-    };
-
-    const increase = () => {
-      formData.guestCount++;
+      errors[currentStep.value] = error;
+      return !error;
     };
 
     const nextStep = () => {
-      if (currentStep.value < 8) {
+      if (validateCurrentStep()) {
         currentStep.value++;
       }
     };
 
     const selectGuestCount = (count) => {
       formData.guestCount = count;
-      currentStep.value++;
+      nextStep();
     };
 
     const selectMode = (mode) => {
       formData.premType = mode;
-      currentStep.value++;
+      nextStep();
     };
 
     const selectType = (type) => {
       formData.accomType = type;
-      currentStep.value++;
+      nextStep();
     };
 
     const isConvenSelected = (conven) => {
@@ -453,6 +511,10 @@ export default {
     };
 
     const submitForm = async () => {
+      if (!validateCurrentStep()) {
+        return;
+      }
+
       const formDataToSend = new FormData();
 
       formDataToSend.append("title", formData.title);
@@ -487,12 +549,13 @@ export default {
       closeModal,
       currentStep,
       formData,
+      errors,
       isConvenSelected,
       toggleConven,
       selectMode,
       selectType,
-      increase,
-      decrease,
+      increase: () => formData.guestCount++,
+      decrease: () => formData.guestCount > 1 && formData.guestCount--,
       selectGuestCount,
       handleFileUpload,
       nextStep,
@@ -666,5 +729,11 @@ export default {
 .modal-content-prem-load .btn-close,
 .modal-content-prem-load-conven .btn-close {
   margin-left: 95%;
+}
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+  font-size: 0.9rem;
 }
 </style>

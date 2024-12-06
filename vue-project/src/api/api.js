@@ -64,9 +64,9 @@ export const registerAd = async (formData) => {
     }
 };
 
-export const fetchUserAds = async () => {
+export const fetchUserAds = async (page = 1) => {
     try {
-        const response = await api.get('/ads');
+        const response = await api.get(`/ads?page=${page}`);
         return response.data;
     } catch (error) {
         console.error('Ошибка при загрузке объявлений:', error);
@@ -84,15 +84,26 @@ export const fetchAdById = async (id) => {
     }
 };
 
-export const fetchAllAds = async () => {
+export const fetchAllAds = async (page = 1, filters = {}, sort = '') => {
     try {
-        const response = await api.get('/all_ads');
+        const response = await api.get('/all_ads', {
+            params: {
+                page,
+                premType: filters.premType,
+                accomType: filters.accomType,
+                priceRange: filters.priceRange,
+                guestCount: filters.guestCount,
+                conveniences: filters.conveniences,
+                sort,
+            }
+        });
         return response.data;
     } catch (error) {
         console.error('Ошибка при загрузке объявлений:', error);
         throw error;
     }
 };
+
 
 export const reserveAd = async (formData) => {
     try {
@@ -111,7 +122,7 @@ export const reserveAd = async (formData) => {
 export const startChat = async (adId) => {
     try {
         const response = await axios.post('http://localhost:8080/chats', { ad_id: adId });
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error('Ошибка при создании чата:', error);
         throw error;
@@ -139,6 +150,16 @@ export const sendMessageToChat = async (chatId, message) => {
         console.error('Ошибка при отправке сообщения:', error);
         throw error;
     }
+};
+
+
+export const generateReport = async () => {
+  try {
+    const response = await api.post("/generate-report"); 
+    return response.data;
+  } catch (error) {
+    throw new Error("Ошибка при генерации отчета");
+  }
 };
 
 

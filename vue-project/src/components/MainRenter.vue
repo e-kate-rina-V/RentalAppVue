@@ -1,6 +1,7 @@
 <template>
   <div class="page-container">
     <header id="header">
+
       <Head />
       <section>
         <button id="exit-btn" class="btn btn-dark" type="button" @click="logout">
@@ -27,46 +28,26 @@
 
       <div v-else class="ad-list row">
         <div class="sort-section">
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            @click="toggleSortDropdown"
-          >
+          <button class="btn btn-outline-secondary" type="button" @click="toggleSortDropdown">
             <img id="sort-icon" src="../assets/img/sort_icon.png" alt="sort_icon" />
           </button>
 
           <div v-if="isSortDropdownVisible" class="sort-dropdown list-group shadow">
-            <button
-              class="list-group-item list-group-item-action"
-              @click="sortAds('price')"
-            >
+            <button class="list-group-item list-group-item-action" @click="sortAds('price')">
               Ціна (від низької до високої)
             </button>
-            <button
-              class="list-group-item list-group-item-action"
-              @click="sortAds('priceDesc')"
-            >
+            <button class="list-group-item list-group-item-action" @click="sortAds('priceDesc')">
               Ціна (від високої до низької)
             </button>
-            <button
-              class="list-group-item list-group-item-action"
-              @click="sortAds('guests')"
-            >
+            <button class="list-group-item list-group-item-action" @click="sortAds('guests')">
               Можлива кількість гостей (від більшого до меншого)
             </button>
-            <button
-              class="list-group-item list-group-item-action"
-              @click="sortAds('guestsDesc')"
-            >
+            <button class="list-group-item list-group-item-action" @click="sortAds('guestsDesc')">
               Можлива кількість гостей (від меншого до більшого)
             </button>
           </div>
 
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            @click="toggleFilterDropdown"
-          >
+          <button class="btn btn-outline-secondary" type="button" @click="toggleFilterDropdown">
             <img id="filter-icon" src="../assets/img/filter_icon.png" alt="filter_icon" />
           </button>
 
@@ -93,181 +74,104 @@
 
             <div class="list-group-item">
               <label for="priceRange">Ціна:</label>
-              <input
-                type="range"
-                id="priceRange"
-                v-model="filters.priceRange"
-                min="0"
-                max="70000"
-                step="10"
-                class="form-range"
-              />
+              <input type="range" id="priceRange" v-model="filters.priceRange" min="0" max="70000" step="10"
+                class="form-range" />
               <span>{{ filters.priceRange }}₴</span>
             </div>
 
             <div class="list-group-item">
               <label for="guestCount">Кількість гостей:</label>
-              <input
-                type="number"
-                id="guestCount"
-                v-model="filters.guestCount"
-                class="form-control"
-                placeholder="Введіть кількість гостей"
-              />
+              <input type="number" id="guestCount" v-model="filters.guestCount" class="form-control"
+                placeholder="Введіть кількість гостей" />
             </div>
             <div class="list-group-item">
               <h6>Базові зручності</h6>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="wifi"
-                  v-model="filters.conveniences.wifi"
-                />
+                <input type="checkbox" class="form-check-input" id="wifi" v-model="filters.conveniences.wifi" />
                 <label class="form-check-label" for="wifi">Wi-Fi</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="kitchen"
-                  v-model="filters.conveniences.kitchen"
-                />
+                <input type="checkbox" class="form-check-input" id="kitchen" v-model="filters.conveniences.kitchen" />
                 <label class="form-check-label" for="kitchen">Кухня</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="shower"
-                  v-model="filters.conveniences.shower"
-                />
+                <input type="checkbox" class="form-check-input" id="shower" v-model="filters.conveniences.shower" />
                 <label class="form-check-label" for="shower">Душ</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="washing-machine"
-                  v-model="filters.conveniences.washing_machine"
-                />
-                <label class="form-check-label" for="washing-machine"
-                  >Пральна машина</label
-                >
+                <input type="checkbox" class="form-check-input" id="washing-machine"
+                  v-model="filters.conveniences.washing_machine" />
+                <label class="form-check-label" for="washing-machine">Пральна машина</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="conditioner"
-                  v-model="filters.conveniences.conditioner"
-                />
+                <input type="checkbox" class="form-check-input" id="conditioner"
+                  v-model="filters.conveniences.conditioner" />
                 <label class="form-check-label" for="conditioner">Кондиціонер</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="heating"
-                  v-model="filters.conveniences.heating"
-                />
+                <input type="checkbox" class="form-check-input" id="heating" v-model="filters.conveniences.heating" />
                 <label class="form-check-label" for="heating">Опалення</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="work-place"
-                  v-model="filters.conveniences.work_place"
-                />
+                <input type="checkbox" class="form-check-input" id="work-place"
+                  v-model="filters.conveniences.work_place" />
                 <label class="form-check-label" for="work-place">Робоче місце</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="television"
-                  v-model="filters.conveniences.television"
-                />
+                <input type="checkbox" class="form-check-input" id="television"
+                  v-model="filters.conveniences.television" />
                 <label class="form-check-label" for="television">Телевізор</label>
               </div>
             </div>
             <div class="list-group-item">
               <h6>Особливі зручності</h6>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="parking"
-                  v-model="filters.conveniences.parking"
-                />
+                <input type="checkbox" class="form-check-input" id="parking" v-model="filters.conveniences.parking" />
                 <label class="form-check-label" for="parking">Паркування</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="breakfast"
-                  v-model="filters.conveniences.breakfast"
-                />
+                <input type="checkbox" class="form-check-input" id="breakfast"
+                  v-model="filters.conveniences.breakfast" />
                 <label class="form-check-label" for="breakfast">Сніданок</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="pets"
-                  v-model="filters.conveniences.pets"
-                />
+                <input type="checkbox" class="form-check-input" id="pets" v-model="filters.conveniences.pets" />
                 <label class="form-check-label" for="pets">Можна з тваринами</label>
               </div>
             </div>
             <div class="list-group-item">
               <h6>Безпека</h6>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="medicine-chest"
-                  v-model="filters.conveniences.medicine_chest"
-                />
+                <input type="checkbox" class="form-check-input" id="medicine-chest"
+                  v-model="filters.conveniences.medicine_chest" />
                 <label class="form-check-label" for="medicine-chest">Аптечка</label>
               </div>
               <div class="form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="fire-extinguisher"
-                  v-model="filters.conveniences.fire_extinguisher"
-                />
-                <label class="form-check-label" for="fire-extinguisher"
-                  >Вогнегасник</label
-                >
+                <input type="checkbox" class="form-check-input" id="fire-extinguisher"
+                  v-model="filters.conveniences.fire_extinguisher" />
+                <label class="form-check-label" for="fire-extinguisher">Вогнегасник</label>
               </div>
             </div>
           </div>
 
           <section id="search-section">
-            <input
-              type="search"
-              id="search"
-              placeholder="Почати пошук"
-              v-model="searchQuery"
-            />
+            <input type="search" id="search" placeholder="Почати пошук" v-model="searchQuery" />
             <img id="search-sign" src="../assets/img/search-sign.png" alt="search-sign" />
           </section>
         </div>
 
-        <div
-          class="col-12 col-md-4 mb-4 d-flex"
-          v-for="ad in filteredAndSortedAds"
-          :key="ad.id"
-        >
+        <div class="col-12 col-md-4 mb-4 d-flex" v-for="ad in filteredAndSortedAds" :key="ad.id">
           <div class="ad-card-wrapper">
             <AdCard :ad="ad" />
           </div>
         </div>
       </div>
+      <div v-if="totalPages > 1" class="pagination">
+        <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</button>
+      </div>
+
     </main>
 
     <Footer />
@@ -307,12 +211,16 @@ export default {
     });
 
     const sortOption = ref(null);
+    const currentPage = ref(1);
+    const totalPages = ref(1);
 
     const getAllAds = async () => {
       try {
         isLoading.value = true;
-        ads.value = await fetchAllAds();
-        console.log("Fetched ads:", ads.value);
+        const response = await fetchAllAds({ page: currentPage.value });
+        console.log("Fetched ads:", response);
+        ads.value = response.data;
+        totalPages.value = response.last_page;
       } catch (error) {
         errorMessage.value = "Ошибка при загрузке объявлений.";
       } finally {
@@ -320,69 +228,42 @@ export default {
       }
     };
 
-    const filteredAds = computed(() => {
-      return ads.value.filter((ad) => {
-        const matchesPremType =
-          !filters.value.premType || ad.prem_type === filters.value.premType;
-
-        const matchesAccomType =
-          !filters.value.accomType || ad.accom_type === filters.value.accomType;
-
-        const matchesPrice = ad.price <= filters.value.priceRange;
-
-        const matchesGuestCount =
-          !filters.value.guestCount || ad.guest_count >= filters.value.guestCount;
-
-        const matchesConveniences = Object.keys(filters.value.conveniences).every(
-          (key) => {
-            if (filters.value.conveniences[key]) {
-              return ad.conveniences.some((convenience) => convenience.name === key);
-            }
-            return true;
-          }
-        );
-
-        const matchesSearchQuery =
-          !searchQuery.value ||
-          ad.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-          (ad.description &&
-            ad.description.toLowerCase().includes(searchQuery.value.toLowerCase()));
-
-        return (
-          matchesPremType &&
-          matchesAccomType &&
-          matchesPrice &&
-          matchesGuestCount &&
-          matchesConveniences &&
-          matchesSearchQuery
-        );
-      });
-    });
-
-    const sortedAds = computed(() => {
-      let sorted = [...filteredAds.value];
-      if (sortOption.value === "price") {
-        sorted.sort((a, b) => a.price - b.price);
-      } else if (sortOption.value === "priceDesc") {
-        sorted.sort((a, b) => b.price - a.price);
-      } else if (sortOption.value === "guests") {
-        sorted.sort((a, b) => a.guest_count - b.guest_count);
-      } else if (sortOption.value === "guestsDesc") {
-        sorted.sort((a, b) => b.guest_count - a.guest_count);
-      }
-      return sorted;
-    });
-
     const filteredAndSortedAds = computed(() => {
-      return sortedAds.value;
+      let filtered = ads.value.filter((ad) => {
+        const matchesPremType = !filters.value.premType || ad.prem_type === filters.value.premType;
+        const matchesAccomType = !filters.value.accomType || ad.accom_type === filters.value.accomType;
+        const matchesPrice = ad.price <= filters.value.priceRange;
+        const matchesGuestCount = !filters.value.guestCount || ad.guest_count >= filters.value.guestCount;
+        const matchesConveniences = Object.keys(filters.value.conveniences).every((key) => {
+          if (filters.value.conveniences[key]) {
+            return ad.conveniences.some((convenience) => convenience.name === key);
+          }
+          return true;
+        });
+        const matchesSearchQuery =
+          !searchQuery.value || ad.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+          (ad.description && ad.description.toLowerCase().includes(searchQuery.value.toLowerCase()));
+
+        return matchesPremType && matchesAccomType && matchesPrice && matchesGuestCount && matchesConveniences && matchesSearchQuery;
+      });
+
+      if (sortOption.value === "price") {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (sortOption.value === "priceDesc") {
+        filtered.sort((a, b) => b.price - a.price);
+      } else if (sortOption.value === "guests") {
+        filtered.sort((a, b) => a.guest_count - b.guest_count);
+      } else if (sortOption.value === "guestsDesc") {
+        filtered.sort((a, b) => b.guest_count - a.guest_count);
+      }
+
+      return filtered;
     });
 
-    const logout = async () => {
-      try {
-        await logoutUser();
-        router.push("/home");
-      } catch (error) {
-        alert("Произошла ошибка при выходе. Попробуйте снова.");
+    const changePage = (newPage) => {
+      if (newPage >= 1 && newPage <= totalPages.value) {
+        currentPage.value = newPage;
+        getAllAds();
       }
     };
 
@@ -396,7 +277,17 @@ export default {
 
     const sortAds = (option) => {
       sortOption.value = option;
-      isSortDropdownVisible.value = false;
+      toggleSortDropdown();
+    };
+
+    const logout = async () => {
+      try {
+        await logoutUser();
+        router.push('/home');
+      } catch (error) {
+        console.error('Logout error:', error);
+        alert('Произошла ошибка при выходе. Попробуйте снова.');
+      }
     };
 
     onMounted(() => {
@@ -407,17 +298,18 @@ export default {
       ads,
       isLoading,
       errorMessage,
-      searchQuery,
       filters,
-      filteredAds,
-      sortedAds,
+      searchQuery,
+      currentPage,
+      totalPages,
       filteredAndSortedAds,
-      isSortDropdownVisible,
-      isFilterDropdownVisible,
-      logout,
+      changePage,
       toggleSortDropdown,
       toggleFilterDropdown,
       sortAds,
+      logout,
+      isSortDropdownVisible,
+      isFilterDropdownVisible,
     };
   },
 };

@@ -12,16 +12,26 @@
             <div class="d-flex flex-column">
               <label for="arrival-date">Прибуття</label>
               <flatpickr v-model="formData.arrival_date" placeholder="Оберіть дату" />
+              <div v-if="errors.arrival_date" class="error-message">
+                {{ errors.arrival_date }}
+              </div>
             </div>
+
             <div class="d-flex flex-column">
               <label for="departure-date">Виїзд</label>
               <flatpickr v-model="formData.depart_date" placeholder="Оберіть дату" />
+              <div v-if="errors.depart_date" class="error-message">
+                {{ errors.depart_date }}
+              </div>
             </div>
           </div>
         </div>
 
         <div class="guest-controls">
           <label>Гості</label>
+          <div v-if="errors.guests" class="error-message">
+            {{ errors.guests }}
+          </div>
           <div class="row row-cols-2">
             <section>
               <h6>Дорослі</h6>
@@ -64,7 +74,7 @@
             </section>
             <section>
               <h6>Домашні тварини</h6>
-              <div v-if="ad.conveniences && ad.conveniences.some(c => c.name === 'pets')">
+              <div v-if="ad.conveniences && ad.conveniences.some((c) => c.name === 'pets')">
                 <div id="guest_controls" class="d-flex align-items-center">
                   <button class="guest-btn" type="button" @click="changeGuestCount('guestPets', 'decrease')"
                     :disabled="formData.guestPets === 0">
@@ -77,7 +87,8 @@
                 </div>
               </div>
               <div v-else>
-                <p>Домашні тварини не дозволені</p>
+                <p>Цей об'єкт розміщення не допускає наявності домашніх тварин</p>
+                <span>*Тварини-помічники не є домашніми тваринами</span>
               </div>
             </section>
           </div>
@@ -88,6 +99,11 @@
             ₴ {{ ad.price }} ніч x {{ calculateNights }} ночей = {{ totalCost }}₴
           </h3>
         </div>
+
+        <div v-if="reservationError" class="error-message">
+          {{ reservationError }}
+        </div>
+
         <button type="submit" class="btn btn-primary">Забронювати</button>
       </div>
     </form>
@@ -99,6 +115,11 @@ import { reactive, computed, ref, watch } from "vue";
 import flatpickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import { reserveAd } from "@/api/api.js";
+import {
+  validateArrivalDate,
+  validateDepartureDate,
+  validateGuestCount,
+} from "../validation/reservation_validation.js";
 
 export default {
   name: "Reservation",
@@ -124,6 +145,14 @@ export default {
       guestBabyCount: 0,
       guestPets: 0,
     });
+
+    const errors = reactive({
+      arrival_date: "",
+      depart_date: "",
+      guests: "",
+    });
+
+    const reservationError = ref("");
 
     const calculateNights = computed(() => {
       if (formData.arrival_date && formData.depart_date) {
@@ -152,22 +181,47 @@ export default {
       if (action === "increase") {
         formData[guestType]++;
       } else if (action === "decrease") {
-        if (guestType === "guestAdultCount" && formData[guestType] === 1) return; 
+        if (guestType === "guestAdultCount" && formData[guestType] === 1) return;
         if (formData[guestType] > 0) formData[guestType]--;
       }
     };
 
+    const resetReservationData = () => {
+      formData.arrival_date = null;
+      formData.depart_date = null;
+      formData.nights_num = 0;
+      formData.guestAdultCount = 1;
+      formData.guestChildrenCount = 0;
+      formData.guestBabyCount = 0;
+      formData.guestPets = 0;
+    }
+    const resetValidationErrors = () => {
+      errors.arrival_date = "";
+      errors.depart_date = "";
+      errors.guests = "";
+    };
 
     const closeModal = () => {
+      resetReservationData();
+      resetValidationErrors();
       emit("close-modal");
     };
 
     const submitReservation = async () => {
+      const arrivalDateError = validateArrivalDate(formData.arrival_date);
+      const departureDateError = validateDepartureDate(
+        formData.depart_date,
+        formData.arrival_date
+      );
+      const guestCountError = validateGuestCount(formData.guestAdultCount);
 
-      if (!formData.arrival_date || !formData.depart_date || formData.nights_num <= 0) {
-        alert("Пожалуйста, выберите корректные даты.");
+      errors.arrival_date = arrivalDateError;
+      errors.depart_date = departureDateError;
+      errors.guests = guestCountError;
+
+      if (arrivalDateError || departureDateError || guestCountError) {
         return;
-    }
+      }
 
       const payload = {
         arrival_date: formData.arrival_date,
@@ -178,16 +232,17 @@ export default {
         guestBabyCount: formData.guestBabyCount,
         guestPets: formData.guestPets,
         ad_id: props.ad.id,
-        total_cost: totalCost.value
+        total_cost: totalCost.value,
       };
+
       try {
         const response = await reserveAd(payload);
         console.log("Reservation success:", response.data);
         closeModal();
-        alert("Бронирование успешно создано!");
+        alert("Booking successfully created!");
       } catch (error) {
         console.error("Reservation failed:", error);
-        alert("Не удалось создать бронирование. Попробуйте еще раз.");
+        reservationError.value = "Failed to create the booking. Please try again.";
       }
     };
 
@@ -198,6 +253,8 @@ export default {
       closeModal,
       changeGuestCount,
       submitReservation,
+      errors,
+      reservationError,
     };
   },
 };
@@ -245,5 +302,11 @@ export default {
 
 .btn-close {
   margin-left: 70%;
+}
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+  font-size: 0.9rem;
 }
 </style>

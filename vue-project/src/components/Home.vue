@@ -3,11 +3,6 @@
     <header id="header">
       <Head />
 
-      <!-- <section id="search-section">
-        <input type="search" id="search" placeholder="Почати пошук" />
-        <img id="search-sign" src="../assets/img/search-sign.png" alt="search-sign" />
-      </section> -->
-
       <section id="auth-section">
         <button @click="openModal" class="btn btn-dark">Авторизація</button>
       </section>
@@ -118,7 +113,7 @@ header {
   left: 0;
   width: 100%;
   height: 15%;
-  background-color: #f1f584;
+  background-color: #f6f8b4;
   padding-top: 2%;
   padding-left: 5%;
   display: inline-flex;
@@ -143,10 +138,6 @@ main {
   flex: 1;
   padding-top: 80px;
 }
-
-/* #conv-p {
-  margin-bottom: -10%;
-} */
 
 #conven {
   display: flex;
