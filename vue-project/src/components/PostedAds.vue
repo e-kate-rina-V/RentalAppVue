@@ -1,6 +1,7 @@
 <template>
   <div class="page-container">
     <header id="header">
+
       <Head />
     </header>
 
@@ -28,24 +29,16 @@
         </div>
 
         <div v-if="ads.total > ads.per_page">
-          <button
-            :disabled="ads.current_page === 1"
-            @click="loadPage(ads.current_page - 1)"
-          >
+          <button :disabled="ads.current_page === 1" @click="loadPage(ads.current_page - 1)">
             Previous
           </button>
           <span>Page {{ ads.current_page }} of {{ ads.last_page }}</span>
-          <button
-            :disabled="ads.current_page === ads.last_page"
-            @click="loadPage(ads.current_page + 1)"
-          >
+          <button :disabled="ads.current_page === ads.last_page" @click="loadPage(ads.current_page + 1)">
             Next
           </button>
         </div>
       </div>
     </main>
-
-    <button @click="handleReportAction">Скачать отчет</button>
   </div>
 </template>
 
@@ -54,7 +47,7 @@ import { ref, onMounted } from "vue";
 import Head from "./vue_helpers/Head.vue";
 import Footer from "./vue_helpers/Footer.vue";
 import AdCard from "./AdCard.vue";
-import { fetchUserAds, generateReport } from "@/api/api.js";
+import { fetchUserAds } from "@/api/api.js";
 
 export default {
   name: "PostedAds",
@@ -88,39 +81,9 @@ export default {
       getAds(page);
     };
 
-    const handleReportAction = async () => {
-      try {
-        await generateReport();
-        isReportGenerated.value = true;
-        message.value = "Отчет генерируется...";
-      } catch (error) {
-        message.value = "Ошибка при генерации отчета.";
-        console.error(error);
-      }
-    };
-
-    const downloadPDF = (fileName) => {
-      if (!fileName) {
-        console.error("Отсутствует имя файла для скачивания.");
-        return;
-      }
-      const url = `/storage/reports/${fileName}`;
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = fileName;
-      link.click();
-    };
-
     onMounted(() => {
       getAds();
 
-      window.Echo.channel("reports").listen("ReportGenerated", (event) => {
-        fileName.value = event.fileName;
-        message.value = event.message;
-        isReportGenerated.value = true;
-        downloadPDF(fileName.value);
-      });
     });
 
     return {
@@ -130,9 +93,6 @@ export default {
       loadPage,
       fileName,
       message,
-      handleReportAction,
-      downloadPDF,
-      isReportGenerated,
     };
   },
 };

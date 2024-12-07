@@ -8,6 +8,15 @@ const api = axios.create({
     withCredentials: true,
 });
 
+// export const apiBlob = axios.create({
+//     baseURL: 'http://localhost:8080',
+//     headers: {
+//         'Content-Type': 'application/json',
+//     },
+//     responseType: 'blob',
+//     withCredentials: true,
+// });
+
 export const registerUser = async (data) => {
     try {
         const response = await api.post('register', data);
@@ -154,14 +163,13 @@ export const sendMessageToChat = async (chatId, message) => {
 
 
 export const generateReport = async () => {
-  try {
-    const response = await api.post("/generate-report"); 
-    return response.data;
-  } catch (error) {
-    throw new Error("Ошибка при генерации отчета");
-  }
+    try {
+        const response = await api.post("/generate-report");
+        return response.data;
+    } catch (error) {
+        throw new Error("Ошибка при генерации отчета");
+    }
 };
-
 
 
 
