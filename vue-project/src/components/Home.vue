@@ -103,7 +103,6 @@ export default {
 #header {
   display: flex;
   justify-content: flex-start;
-  margin-left: 7%;
   z-index: 3;
 }
 
@@ -117,7 +116,7 @@ header {
   padding-top: 2%;
   padding-left: 5%;
   display: inline-flex;
-  gap: 22%;
+  gap: 45%;
   align-items: center;
   justify-content: center;
   z-index: 1;

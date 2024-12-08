@@ -30,7 +30,7 @@ footer {
   align-items: baseline;
 }
 
-.footer-text a {
+#footer-text a {
   color: whitesmoke;
   text-decoration: none;
 }

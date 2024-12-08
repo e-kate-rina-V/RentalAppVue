@@ -8,15 +8,6 @@ const api = axios.create({
     withCredentials: true,
 });
 
-export const apiBlob = axios.create({
-    baseURL: 'http://localhost:8080',
-    headers: {
-        'Content-Type': 'application/pdf',
-    },
-    responseType: 'blob',
-    withCredentials: true,
-});
-
 export const registerUser = async (data) => {
     try {
         const response = await api.post('register', data);
@@ -113,7 +104,6 @@ export const fetchAllAds = async (page = 1, filters = {}, sort = '') => {
     }
 };
 
-
 export const reserveAd = async (formData) => {
     try {
         const response = await api.post('reservation', formData, {
@@ -127,7 +117,6 @@ export const reserveAd = async (formData) => {
         throw error.response ? error.response.data : error;
     }
 };
-
 
 export const submitReview = async (adId, ratings, reviews, averageRating) => {
     try {
@@ -152,12 +141,16 @@ export const submitReview = async (adId, ratings, reviews, averageRating) => {
 
 export const generateReport = async () => {
     try {
-        const response = await apiBlob.post("/generate-report");
+        const response = await api.post("/generate-report");
         return response.data;
     } catch (error) {
         throw new Error("Ошибка при генерации отчета");
     }
 };
+
+
+
+
 
 export const startChat = async (adId) => {
     try {

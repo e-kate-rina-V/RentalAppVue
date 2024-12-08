@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     padding-bottom: 3%;
+    margin-left: 50%;
 }
 
 #main-icon {
