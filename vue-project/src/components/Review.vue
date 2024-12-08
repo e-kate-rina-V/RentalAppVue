@@ -1,6 +1,6 @@
 <template>
   <div v-if="showModalReview" class="modal">
-    <form class="review-form" @submit.prevent="submitReview">
+    <form class="review-form" @submit.prevent="submitReviewHandler">
       <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
 
       <link rel="stylesheet"
@@ -55,10 +55,10 @@
   </div>
 </template>
 
-
 <script>
-import { reactive, computed, ref } from "vue";
+import { reactive, computed } from "vue";
 import StarRating from "./vue_helpers/StarRating.vue";
+import { submitReview } from "@/api/api.js";
 
 export default {
   name: "Review",
@@ -101,12 +101,8 @@ export default {
     };
 
     const averageRating = computed(() => {
-      const totalRatings = Object.values(ratings).reduce(
-        (sum, rating) => sum + rating,
-        0
-      );
-      const numberOfRatings = Object.values(ratings).filter((rating) => rating > 0)
-        .length;
+      const totalRatings = Object.values(ratings).reduce((sum, rating) => sum + rating, 0);
+      const numberOfRatings = Object.values(ratings).filter((rating) => rating > 0).length;
       return numberOfRatings > 0 ? (totalRatings / numberOfRatings).toFixed(1) : "0.0";
     });
 
@@ -119,7 +115,7 @@ export default {
       emit("close-modal");
     };
 
-    const submitReview = () => {
+    const submitReviewHandler = async () => {
       const hasAnyRating = Object.values(ratings).some((rating) => rating > 0);
 
       if (!hasAnyRating) {
@@ -127,17 +123,29 @@ export default {
         return;
       }
 
-      const payload = {
-        ratings: { ...ratings },
-        reviews: { ...reviews },
+      const ratingsData = { ...ratings };
+      const reviewsData = { ...reviews };
+
+      const requestData = {
         adId: props.ad.id,
+        ratings: ratingsData,
+        reviews: reviewsData,
         averageRating: averageRating.value,
       };
 
-      console.log("Review submitted:", payload);
+      console.log("Review Data:", requestData);
 
-      closeModal();
+      try {
+        await submitReview(props.ad.id, ratingsData, reviewsData, averageRating.value);
+        closeModal();
+        alert("Ваш відгук успішно надіслано!");
+      } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Сталася помилка при надсиланні відгуку, будь ласка, спробуйте ще раз.");
+      }
     };
+
+
 
     return {
       ratings,
@@ -145,12 +153,13 @@ export default {
       averageRating,
       updateRating,
       closeModal,
-      submitReview,
+      submitReviewHandler,
       errors,
     };
   },
 };
 </script>
+
 
 
 <style>

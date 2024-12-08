@@ -165,8 +165,9 @@
   </div>
 </template>
 
-<script>import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router"; // Импортируем useRouter
+<script>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { fetchAdById, startChat } from "@/api/api.js";
 import Head from "./vue_helpers/Head.vue";
 import Footer from "./vue_helpers/Footer.vue";

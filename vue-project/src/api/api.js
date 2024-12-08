@@ -8,14 +8,14 @@ const api = axios.create({
     withCredentials: true,
 });
 
-// export const apiBlob = axios.create({
-//     baseURL: 'http://localhost:8080',
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-//     responseType: 'blob',
-//     withCredentials: true,
-// });
+export const apiBlob = axios.create({
+    baseURL: 'http://localhost:8080',
+    headers: {
+        'Content-Type': 'application/pdf',
+    },
+    responseType: 'blob',
+    withCredentials: true,
+});
 
 export const registerUser = async (data) => {
     try {
@@ -128,6 +128,37 @@ export const reserveAd = async (formData) => {
     }
 };
 
+
+export const submitReview = async (adId, ratings, reviews, averageRating) => {
+    try {
+        const payload = {
+            ratings,
+            reviews,
+            adId,
+            averageRating,
+        };
+
+        const response = await api.post('reviews', payload, {
+            withCredentials: true,
+        });
+
+        console.log('Review successfully submitted:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error submitting review:', error);
+        throw error.response ? error.response.data : error;
+    }
+};
+
+export const generateReport = async () => {
+    try {
+        const response = await apiBlob.post("/generate-report");
+        return response.data;
+    } catch (error) {
+        throw new Error("Ошибка при генерации отчета");
+    }
+};
+
 export const startChat = async (adId) => {
     try {
         const response = await axios.post('http://localhost:8080/chats', { ad_id: adId });
@@ -137,7 +168,6 @@ export const startChat = async (adId) => {
         throw error;
     }
 };
-
 
 export const fetchMessages = async (chatId) => {
     try {
@@ -162,14 +192,6 @@ export const sendMessageToChat = async (chatId, message) => {
 };
 
 
-export const generateReport = async () => {
-    try {
-        const response = await api.post("/generate-report");
-        return response.data;
-    } catch (error) {
-        throw new Error("Ошибка при генерации отчета");
-    }
-};
 
 
 
