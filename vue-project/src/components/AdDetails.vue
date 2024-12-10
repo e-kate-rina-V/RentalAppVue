@@ -79,11 +79,14 @@
               <button @click="openModal" type="button" class="btn btn-dark">
                 Забронювати
               </button>
+              <button @click="startChat" type="button" class="btn btn-success">
+                Розпочати чат
+              </button>
               <button @click="openModalReview" type="button" class="btn btn-warning">
                 Залишити відгук
               </button>
-              <button @click="startChat" type="button" class="btn btn-success">
-                Розпочати чат
+              <button @click="openReviewsModal" type="button" class="btn btn-warning">
+                Переглянути відгуки
               </button>
             </div>
           </section>
@@ -104,6 +107,12 @@
           </div>
 
           <h1>Ціна: {{ ad.price }} грн/ніч</h1>
+
+          <div v-if="averageRating !== null">
+            <h3>Середній рейтинг: {{ averageRating.toFixed(1) }} ⭐</h3>
+          </div>
+          <span v-else>Немає відгуків для цього оголошення</span>
+
           <p v-if="ad.description">Опис: {{ ad.description }}</p>
           <span v-else></span>
 
@@ -242,17 +251,24 @@
     <Reservation :showModal="showModal" :ad="ad" @close-modal="closeModal" />
 
     <Review :showModalReview="showModalReview" :ad="ad" @close-modal="closeModalReview" />
+
+    <div v-if="showReviewsModal" class="modal-overlay" @click.self="closeReviewsModal">
+      <div class="modal-content">
+        <ReviewList :adId="ad.id" @close="closeReviewsModal" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { fetchAdById, openChat } from "@/api/api.js";
+import { fetchAdById, openChat, fetchReviewsByAdId } from "@/api/api.js";
 import Head from "./vue_helpers/Head.vue";
 import Footer from "./vue_helpers/Footer.vue";
 import Reservation from "./Reservation.vue";
 import Review from "./Review.vue";
+import ReviewList from "./ReviewList.vue";
 
 export default {
   name: "AdDetails",
@@ -261,11 +277,14 @@ export default {
     Footer,
     Reservation,
     Review,
+    ReviewList,
   },
   setup() {
     const route = useRoute();
     const router = useRouter();
     const ad = ref(null);
+    const reviews = ref([]);
+    const errorMessage = ref(null);
 
     const chatId = route.params.id;
 
@@ -294,11 +313,31 @@ export default {
     const getAdDetails = async () => {
       try {
         ad.value = await fetchAdById(route.params.id);
+        fetchReviews();
       } catch (error) {
         console.error("Ошибка при загрузке данных объявления:", error);
         ad.value = null;
       }
     };
+
+    const fetchReviews = async () => {
+      try {
+        const response = await fetchReviewsByAdId(route.params.id);
+        reviews.value = response;
+      } catch (error) {
+        console.error("Ошибка при загрузке отзывов:", error);
+        errorMessage.value = "Не вдалося отримати відгуки.";
+      }
+    };
+
+    const averageRating = computed(() => {
+      if (reviews.value.length === 0) return null;
+      const totalRating = reviews.value.reduce(
+        (sum, review) => sum + review.average_rating,
+        0
+      );
+      return totalRating / reviews.value.length;
+    });
 
     const startChat = async () => {
       try {
@@ -332,17 +371,32 @@ export default {
       showModalReview.value = false;
     };
 
+    const showReviewsModal = ref(false);
+
+    const openReviewsModal = () => {
+      showReviewsModal.value = true;
+    };
+
+    const closeReviewsModal = () => {
+      showReviewsModal.value = false;
+    };
+
     return {
       ad,
       getPremTypeLabel,
       getAccomTypeLabel,
       startChat,
-      showModal,
-      showModalReview,
       openModal,
       closeModal,
+      showModal,
+      showModalReview,
+      showReviewsModal,
       openModalReview,
       closeModalReview,
+      openReviewsModal,
+      closeReviewsModal,
+      reviews,
+      averageRating,
     };
   },
 };
@@ -402,5 +456,38 @@ export default {
   height: 50px;
   margin-bottom: 8px;
   object-fit: contain;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 }
 </style>

@@ -139,6 +139,23 @@ export const submitReview = async (adId, ratings, reviews, averageRating) => {
     }
 };
 
+export const fetchReviewsByAdId = async (adId) => {
+    try {
+        const response = await api.get(`/ads/${adId}/reviews`);
+        const reviews = response.data;
+
+        for (let review of reviews) {
+            const userResponse = await api.get(`/users/${review.user_id}`);
+            review.user_name = userResponse.data.name;
+        }
+
+        return reviews;
+    } catch (error) {
+        console.error('Ошибка при загрузке отзывов:', error);
+        throw error;
+    }
+};
+
 export const generateReport = async () => {
     try {
         const response = await api.post("/generate-report");
@@ -148,9 +165,11 @@ export const generateReport = async () => {
     }
 };
 
+
+
 export const openChat = async (adId) => {
     try {
-        const response = await api.post(`chats/${adId}`); 
+        const response = await api.post(`chats/${adId}`);
         return response.data;
     } catch (error) {
         console.error("Ошибка при открытии чата:", error);
@@ -160,28 +179,28 @@ export const openChat = async (adId) => {
 
 export const fetchMessages = async (chatId) => {
     try {
-      const response = await api.get(`chats/${chatId}/messages`);
-      return response.data;
+        const response = await api.get(`chats/${chatId}/messages`);
+        return response.data;
     } catch (error) {
-      console.error("Ошибка при получении сообщений:", error);
-      throw error;
+        console.error("Ошибка при получении сообщений:", error);
+        throw error;
     }
-  };
+};
 
-  export const sendMessageAPI = async (chatId, messageContent, userId) => {
+export const sendMessageAPI = async (chatId, messageContent, userId) => {
     try {
-      const response = await api.post(`chats/${chatId}/messages`, {
-        message: messageContent,  
-        user_id: userId,
-      });
-      return response.data;
+        const response = await api.post(`chats/${chatId}/messages`, {
+            message: messageContent,
+            user_id: userId,
+        });
+        return response.data;
     } catch (error) {
-      console.error("Ошибка при отправке сообщения:", error);
-      throw error;
+        console.error("Ошибка при отправке сообщения:", error);
+        throw error;
     }
-  };
-  
-  
+};
+
+
 
 
 

@@ -12,7 +12,7 @@
         </button>
         <button class="btn btn-dark" type="button" @click="logout">Вийти</button>
         <button class="btn btn-dark" type="button" @click="handleReportAction">
-          Скачать отчет
+          Завантажити звіт
         </button>
       </section>
     </header>
