@@ -148,41 +148,43 @@ export const generateReport = async () => {
     }
 };
 
-
-
-
-
-export const startChat = async (adId) => {
+export const openChat = async (adId) => {
     try {
-        const response = await axios.post('http://localhost:8080/chats', { ad_id: adId });
+        const response = await api.post(`chats/${adId}`); 
         return response.data;
     } catch (error) {
-        console.error('Ошибка при создании чата:', error);
+        console.error("Ошибка при открытии чата:", error);
         throw error;
     }
 };
 
 export const fetchMessages = async (chatId) => {
     try {
-        const response = await axios.get(`http://localhost:8080/chats/${chatId}/messages`);
-        return response.data;
+      const response = await api.get(`chats/${chatId}/messages`);
+      return response.data;
     } catch (error) {
-        console.error('Ошибка при загрузке сообщений:', error);
-        throw error;
+      console.error("Ошибка при получении сообщений:", error);
+      throw error;
     }
-};
+  };
 
-export const sendMessageToChat = async (chatId, message) => {
+  export const sendMessageAPI = async (chatId, messageContent, userId) => {
     try {
-        const response = await api.post(`/chats/${chatId}/messages`, { content: message }, {
-            withCredentials: true,
-        });
-        return response.data;
+      const response = await api.post(`chats/${chatId}/messages`, {
+        message: messageContent,  
+        user_id: userId,
+      });
+      return response.data;
     } catch (error) {
-        console.error('Ошибка при отправке сообщения:', error);
-        throw error;
+      console.error("Ошибка при отправке сообщения:", error);
+      throw error;
     }
-};
+  };
+  
+  
+
+
+
 
 
 

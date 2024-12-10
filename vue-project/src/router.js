@@ -4,7 +4,7 @@ import MainRenter from './components/MainRenter.vue';
 import Home from './components/Home.vue';
 import PostedAds from './components/PostedAds.vue';
 import AdDetails from './components/AdDetails.vue';
-import ChatPage from './components/ChatPage.vue';
+import Chat from './components/Chat.vue';
 
 const routes = [
     {
@@ -29,8 +29,8 @@ const routes = [
     },
     {
         path: '/chat/:chatId',
-        name: 'Chat',
-        component: ChatPage,
+        name: 'chat',
+        component: Chat,  
     },
     {
         path: '/home',
