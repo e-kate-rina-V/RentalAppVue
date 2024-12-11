@@ -64,15 +64,16 @@ export const registerAd = async (formData) => {
     }
 };
 
-export const fetchUserAds = async (page = 1) => {
+export const fetchUserAds = async (page = 1, perPage = 5) => {
     try {
-        const response = await api.get(`/ads?page=${page}`);
+        const response = await api.get(`/ads?page=${page}&per_page=${perPage}`);
         return response.data;
     } catch (error) {
         console.error('Ошибка при загрузке объявлений:', error);
         throw error;
     }
 };
+
 
 export const fetchAdById = async (id) => {
     try {

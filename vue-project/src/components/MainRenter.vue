@@ -1,9 +1,8 @@
 <template>
   <div class="page-container">
     <header id="header">
-
       <Head />
-      <section>
+      <section id="renter-head">
         <button id="exit-btn" class="btn btn-dark" type="button" @click="logout">
           Вийти
         </button>
@@ -12,12 +11,14 @@
 
     <main class="main-renter-body">
       <div v-if="isLoading" class="d-flex flex-column">
-        <div class="d-flex flex-row load">
-          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+        <div id="main-renter-load">
+          <div class="d-flex flex-row load">
+            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+          </div>
+          <span role="status">Завантаження оголошень...</span>
         </div>
-        <span role="status">Завантаження оголошень...</span>
       </div>
 
       <div v-else-if="errorMessage">{{ errorMessage }}</div>
@@ -28,30 +29,53 @@
 
       <div v-else class="ad-list row">
         <div class="sort-section">
-          <button class="btn btn-outline-secondary" type="button" @click="toggleSortDropdown">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            @click="toggleSortDropdown"
+          >
             <img id="sort-icon" src="../assets/img/sort_icon.png" alt="sort_icon" />
           </button>
 
           <div v-if="isSortDropdownVisible" class="sort-dropdown list-group shadow">
-            <button class="list-group-item list-group-item-action" @click="sortAds('price')">
+            <button
+              class="list-group-item list-group-item-action"
+              @click="sortAds('price')"
+            >
               Ціна (від низької до високої)
             </button>
-            <button class="list-group-item list-group-item-action" @click="sortAds('priceDesc')">
+            <button
+              class="list-group-item list-group-item-action"
+              @click="sortAds('priceDesc')"
+            >
               Ціна (від високої до низької)
             </button>
-            <button class="list-group-item list-group-item-action" @click="sortAds('guests')">
+            <button
+              class="list-group-item list-group-item-action"
+              @click="sortAds('guests')"
+            >
               Можлива кількість гостей (від більшого до меншого)
             </button>
-            <button class="list-group-item list-group-item-action" @click="sortAds('guestsDesc')">
+            <button
+              class="list-group-item list-group-item-action"
+              @click="sortAds('guestsDesc')"
+            >
               Можлива кількість гостей (від меншого до більшого)
             </button>
           </div>
 
-          <button class="btn btn-outline-secondary" type="button" @click="toggleFilterDropdown">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            @click="toggleFilterDropdown"
+          >
             <img id="filter-icon" src="../assets/img/filter_icon.png" alt="filter_icon" />
           </button>
 
-          <div v-if="isFilterDropdownVisible" class="filter-dropdown list-group shadow">
+          <div
+            v-if="isFilterDropdownVisible"
+            class="filter-dropdown list-group shadow; dropdown"
+          >
             <div class="list-group-item">
               <label for="roomType">Тип приміщення:</label>
               <select v-model="filters.premType" id="roomType" class="form-select">
@@ -74,106 +98,194 @@
 
             <div class="list-group-item">
               <label for="priceRange">Ціна:</label>
-              <input type="range" id="priceRange" v-model="filters.priceRange" min="0" max="70000" step="10"
-                class="form-range" />
+              <input
+                type="range"
+                id="priceRange"
+                v-model="filters.priceRange"
+                min="0"
+                max="70000"
+                step="10"
+                class="form-range"
+              />
               <span>{{ filters.priceRange }}₴</span>
             </div>
 
             <div class="list-group-item">
               <label for="guestCount">Кількість гостей:</label>
-              <input type="number" id="guestCount" v-model="filters.guestCount" class="form-control"
-                placeholder="Введіть кількість гостей" />
+              <input
+                type="number"
+                id="guestCount"
+                v-model="filters.guestCount"
+                class="form-control"
+                placeholder="Введіть кількість гостей"
+              />
             </div>
             <div class="list-group-item">
               <h6>Базові зручності</h6>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="wifi" v-model="filters.conveniences.wifi" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="wifi"
+                  v-model="filters.conveniences.wifi"
+                />
                 <label class="form-check-label" for="wifi">Wi-Fi</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="kitchen" v-model="filters.conveniences.kitchen" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="kitchen"
+                  v-model="filters.conveniences.kitchen"
+                />
                 <label class="form-check-label" for="kitchen">Кухня</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="shower" v-model="filters.conveniences.shower" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="shower"
+                  v-model="filters.conveniences.shower"
+                />
                 <label class="form-check-label" for="shower">Душ</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="washing-machine"
-                  v-model="filters.conveniences.washing_machine" />
-                <label class="form-check-label" for="washing-machine">Пральна машина</label>
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="washing-machine"
+                  v-model="filters.conveniences.washing_machine"
+                />
+                <label class="form-check-label" for="washing-machine"
+                  >Пральна машина</label
+                >
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="conditioner"
-                  v-model="filters.conveniences.conditioner" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="conditioner"
+                  v-model="filters.conveniences.conditioner"
+                />
                 <label class="form-check-label" for="conditioner">Кондиціонер</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="heating" v-model="filters.conveniences.heating" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="heating"
+                  v-model="filters.conveniences.heating"
+                />
                 <label class="form-check-label" for="heating">Опалення</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="work-place"
-                  v-model="filters.conveniences.work_place" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="work-place"
+                  v-model="filters.conveniences.work_place"
+                />
                 <label class="form-check-label" for="work-place">Робоче місце</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="television"
-                  v-model="filters.conveniences.television" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="television"
+                  v-model="filters.conveniences.television"
+                />
                 <label class="form-check-label" for="television">Телевізор</label>
               </div>
             </div>
             <div class="list-group-item">
               <h6>Особливі зручності</h6>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="parking" v-model="filters.conveniences.parking" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="parking"
+                  v-model="filters.conveniences.parking"
+                />
                 <label class="form-check-label" for="parking">Паркування</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="breakfast"
-                  v-model="filters.conveniences.breakfast" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="breakfast"
+                  v-model="filters.conveniences.breakfast"
+                />
                 <label class="form-check-label" for="breakfast">Сніданок</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="pets" v-model="filters.conveniences.pets" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="pets"
+                  v-model="filters.conveniences.pets"
+                />
                 <label class="form-check-label" for="pets">Можна з тваринами</label>
               </div>
             </div>
             <div class="list-group-item">
               <h6>Безпека</h6>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="medicine-chest"
-                  v-model="filters.conveniences.medicine_chest" />
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="medicine-chest"
+                  v-model="filters.conveniences.medicine_chest"
+                />
                 <label class="form-check-label" for="medicine-chest">Аптечка</label>
               </div>
               <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="fire-extinguisher"
-                  v-model="filters.conveniences.fire_extinguisher" />
-                <label class="form-check-label" for="fire-extinguisher">Вогнегасник</label>
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="fire-extinguisher"
+                  v-model="filters.conveniences.fire_extinguisher"
+                />
+                <label class="form-check-label" for="fire-extinguisher"
+                  >Вогнегасник</label
+                >
               </div>
             </div>
           </div>
 
           <section id="search-section">
-            <input type="search" id="search" placeholder="Почати пошук" v-model="searchQuery" />
+            <input
+              type="search"
+              id="search"
+              placeholder="Почати пошук"
+              v-model="searchQuery"
+            />
             <img id="search-sign" src="../assets/img/search-sign.png" alt="search-sign" />
           </section>
         </div>
 
-        <div class="col-12 col-md-4 mb-4 d-flex" v-for="ad in filteredAndSortedAds" :key="ad.id">
+        <div
+          class="col-12 col-md-4 mb-4 d-flex"
+          v-for="ad in filteredAndSortedAds"
+          :key="ad.id"
+        >
           <div class="ad-card-wrapper">
             <AdCard :ad="ad" />
           </div>
         </div>
       </div>
       <div v-if="totalPages > 1" class="pagination">
-        <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">Previous</button>
+        <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">
+          Previous
+        </button>
         <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">Next</button>
+        <button
+          @click="changePage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+        >
+          Next
+        </button>
       </div>
-
     </main>
-
     <Footer />
   </div>
 </template>
@@ -230,21 +342,35 @@ export default {
 
     const filteredAndSortedAds = computed(() => {
       let filtered = ads.value.filter((ad) => {
-        const matchesPremType = !filters.value.premType || ad.prem_type === filters.value.premType;
-        const matchesAccomType = !filters.value.accomType || ad.accom_type === filters.value.accomType;
+        const matchesPremType =
+          !filters.value.premType || ad.prem_type === filters.value.premType;
+        const matchesAccomType =
+          !filters.value.accomType || ad.accom_type === filters.value.accomType;
         const matchesPrice = ad.price <= filters.value.priceRange;
-        const matchesGuestCount = !filters.value.guestCount || ad.guest_count >= filters.value.guestCount;
-        const matchesConveniences = Object.keys(filters.value.conveniences).every((key) => {
-          if (filters.value.conveniences[key]) {
-            return ad.conveniences.some((convenience) => convenience.name === key);
+        const matchesGuestCount =
+          !filters.value.guestCount || ad.guest_count >= filters.value.guestCount;
+        const matchesConveniences = Object.keys(filters.value.conveniences).every(
+          (key) => {
+            if (filters.value.conveniences[key]) {
+              return ad.conveniences.some((convenience) => convenience.name === key);
+            }
+            return true;
           }
-          return true;
-        });
+        );
         const matchesSearchQuery =
-          !searchQuery.value || ad.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-          (ad.description && ad.description.toLowerCase().includes(searchQuery.value.toLowerCase()));
+          !searchQuery.value ||
+          ad.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+          (ad.description &&
+            ad.description.toLowerCase().includes(searchQuery.value.toLowerCase()));
 
-        return matchesPremType && matchesAccomType && matchesPrice && matchesGuestCount && matchesConveniences && matchesSearchQuery;
+        return (
+          matchesPremType &&
+          matchesAccomType &&
+          matchesPrice &&
+          matchesGuestCount &&
+          matchesConveniences &&
+          matchesSearchQuery
+        );
       });
 
       if (sortOption.value === "price") {
@@ -283,10 +409,10 @@ export default {
     const logout = async () => {
       try {
         await logoutUser();
-        router.push('/home');
+        router.push("/home");
       } catch (error) {
-        console.error('Logout error:', error);
-        alert('Произошла ошибка при выходе. Попробуйте снова.');
+        console.error("Logout error:", error);
+        alert("Произошла ошибка при выходе. Попробуйте снова.");
       }
     };
 
@@ -315,9 +441,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .main-renter-body {
-  margin: 5% auto;
+  display: grid;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 5%;
+  margin-bottom: 10%;
 }
 
 .ad-list img {
@@ -373,15 +503,14 @@ export default {
 .ad-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1%;
 }
 
 .ad-card-wrapper {
   width: 100%;
   min-width: 200px;
-  flex: 1 0 500px;
+  flex: 1 0 400px;
   box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .ad-card-wrapper {
@@ -394,7 +523,12 @@ export default {
   height: 18px;
 }
 
-#exit-btn {
-  padding: 5px 20px;
+#renter-head #exit-btn {
+  padding: 5px 30px;
+  margin-left: 390px;
+}
+
+.dropdown {
+  width: 50%;
 }
 </style>

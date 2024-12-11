@@ -4,248 +4,252 @@
       <Head />
     </header>
 
-    <div class="ad-details">
-      <div v-if="!ad" class="d-flex flex-column">
-        <div class="d-flex flex-row; load">
-          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
-          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+    <main id="main-ad-details">
+      <div class="ad-details">
+        <div v-if="!ad" class="d-flex flex-column">
+          <div id="ad-details-load">
+            <div class="d-flex flex-row; load">
+              <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+              <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+              <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+            </div>
+            <span role="status">Завантаження оголошення...</span>
+          </div>
         </div>
-        <span role="status">Завантаження оголошення...</span>
-      </div>
 
-      <div v-else-if="errorMessage">
-        <p>{{ errorMessage }}</p>
-      </div>
+        <div v-else-if="errorMessage">
+          <p>{{ errorMessage }}</p>
+        </div>
 
-      <div v-else>
-        <div class="d-flex flex-row">
-          <section>
-            <div
-              v-if="ad.materials && ad.materials.length > 0"
-              id="adCarousel"
-              class="carousel slide"
-              data-bs-ride="carousel"
-            >
-              <div class="carousel-indicators">
+        <div v-else>
+          <div class="d-flex flex-row">
+            <section>
+              <div
+                v-if="ad.materials && ad.materials.length > 0"
+                id="adCarousel"
+                class="carousel slide"
+                data-bs-ride="carousel"
+              >
+                <div class="carousel-indicators">
+                  <button
+                    v-for="(material, index) in ad.materials"
+                    :key="'indicator-' + index"
+                    :data-bs-target="'#adCarousel'"
+                    :data-bs-slide-to="index"
+                    :class="{ active: index === 0 }"
+                    aria-label="'Slide ' + (index + 1)"
+                  ></button>
+                </div>
+
+                <div class="carousel-inner">
+                  <div
+                    v-for="(material, index) in ad.materials"
+                    :key="'slide-' + index"
+                    :class="['carousel-item', { active: index === 0 }]"
+                  >
+                    <img
+                      :src="`http://localhost:8080/storage/${material.source}`"
+                      :alt="'Image ' + (index + 1)"
+                      class="d-block w-100 ad-details-img"
+                    />
+                  </div>
+                </div>
+
                 <button
-                  v-for="(material, index) in ad.materials"
-                  :key="'indicator-' + index"
-                  :data-bs-target="'#adCarousel'"
-                  :data-bs-slide-to="index"
-                  :class="{ active: index === 0 }"
-                  aria-label="'Slide ' + (index + 1)"
-                ></button>
-              </div>
-
-              <div class="carousel-inner">
-                <div
-                  v-for="(material, index) in ad.materials"
-                  :key="'slide-' + index"
-                  :class="['carousel-item', { active: index === 0 }]"
+                  class="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#adCarousel"
+                  data-bs-slide="prev"
                 >
-                  <img
-                    :src="`http://localhost:8080/storage/${material.source}`"
-                    :alt="'Image ' + (index + 1)"
-                    class="d-block w-100 ad-details-img"
-                  />
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button
+                  class="carousel-control-next"
+                  type="button"
+                  data-bs-target="#adCarousel"
+                  data-bs-slide="next"
+                >
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+              <p v-else>Зображення для цього оголошення відсутні</p>
+            </section>
+
+            <section>
+              <div id="reserv-btn" class="d-flex flex-column">
+                <button @click="openModal" type="button" class="btn btn-dark">
+                  Забронювати
+                </button>
+                <button @click="startChat" type="button" class="btn btn-success">
+                  Розпочати чат
+                </button>
+                <button @click="openModalReview" type="button" class="btn btn-warning">
+                  Залишити відгук
+                </button>
+                <button @click="openReviewsModal" type="button" class="btn btn-warning">
+                  Переглянути відгуки
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <div class="d-flex flex-column">
+            <h1 v-if="ad.title">{{ ad.title }}</h1>
+            <span v-else></span>
+
+            <div class="d-flex flex-row">
+              <p>Гості: {{ ad.guest_count }}</p>
+              <span>·</span>
+
+              <p>{{ getPremTypeLabel(ad.prem_type) }}</p>
+
+              <span>·</span>
+              <p>{{ getAccomTypeLabel(ad.accom_type) }}</p>
+            </div>
+
+            <h1>Ціна: {{ ad.price }} грн/ніч</h1>
+
+            <div v-if="averageRating !== null">
+              <h3>Середній рейтинг: {{ averageRating.toFixed(1) }} ⭐</h3>
+            </div>
+            <span v-else>Немає відгуків для цього оголошення</span>
+
+            <p v-if="ad.description">Опис: {{ ad.description }}</p>
+            <span v-else></span>
+
+            <p>Зручності для гостей</p>
+
+            <section id="conven" class="conven-grid">
+              <div
+                v-for="(convenience, index) in ad.conveniences"
+                :key="index"
+                class="conven-card"
+              >
+                <img
+                  v-if="convenience.name === 'shower'"
+                  src="../assets/img/shower_icon.png"
+                  alt="Shower"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'wifi'"
+                  src="../assets/img/wifi_icon.png"
+                  alt="Wi-Fi"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'kitchen'"
+                  src="../assets/img/cutlery_icon.png"
+                  alt="kitchen"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'pets'"
+                  src="../assets/img/paw_icon.png"
+                  alt="pets allowed"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'conditioner'"
+                  src="../assets/img/snowflake_icon.png"
+                  alt="air conditioning"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'breakfast'"
+                  src="../assets/img/breakfast_icon.png"
+                  alt="breakfast"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'heating'"
+                  src="../assets/img/heating_icon.png"
+                  alt="heating"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'television'"
+                  src="../assets/img/television_icon.png"
+                  alt="television"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'work_place'"
+                  src="../assets/img/laptop_icon.png"
+                  alt="work place"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'parking'"
+                  src="../assets/img/parking_icon.png"
+                  alt="parking"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'washing_machine'"
+                  src="../assets/img/washing_machine_icon.png"
+                  alt="washing machine"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'medicine_chest'"
+                  src="../assets/img/medicine_chest_icon.png"
+                  alt="medicine chest"
+                  class="conven-img"
+                />
+                <img
+                  v-else-if="convenience.name === 'fire_extinguisher'"
+                  src="../assets/img/fire_extinguisher_icon.png"
+                  alt="fire extinguisher"
+                  class="conven-img"
+                />
+                <div v-if="convenience.name === 'shower'">
+                  <p>Душ</p>
+                </div>
+                <div v-else-if="convenience.name === 'wifi'">
+                  <p>Wi-Fi</p>
+                </div>
+                <div v-else-if="convenience.name === 'kitchen'">
+                  <p>Кухня</p>
+                </div>
+                <div v-else-if="convenience.name === 'television'">
+                  <p>Телевізор</p>
+                </div>
+                <div v-else-if="convenience.name === 'pets'">
+                  <p>Можна з тваринами</p>
+                </div>
+                <div v-else-if="convenience.name === 'work_place'">
+                  <p>Робоче місце</p>
+                </div>
+                <div v-else-if="convenience.name === 'conditioner'">
+                  <p>Кондиціонер</p>
+                </div>
+                <div v-else-if="convenience.name === 'heating'">
+                  <p>Опалення</p>
+                </div>
+                <div v-else-if="convenience.name === 'parking'">
+                  <p>Паркування</p>
+                </div>
+                <div v-else-if="convenience.name === 'breakfast'">
+                  <p>Сніданок</p>
+                </div>
+                <div v-else-if="convenience.name === 'washing_machine'">
+                  <p>Пральна машина</p>
+                </div>
+                <div v-else-if="convenience.name === 'medicine_chest'">
+                  <p>Аптечка</p>
+                </div>
+                <div v-else-if="convenience.name === 'fire_extinguisher'">
+                  <p>Вогнегасник</p>
                 </div>
               </div>
-
-              <button
-                class="carousel-control-prev"
-                type="button"
-                data-bs-target="#adCarousel"
-                data-bs-slide="prev"
-              >
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button
-                class="carousel-control-next"
-                type="button"
-                data-bs-target="#adCarousel"
-                data-bs-slide="next"
-              >
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-            <p v-else>Зображення для цього оголошення відсутні</p>
-          </section>
-
-          <section>
-            <div id="reserv-btn" class="d-flex flex-column">
-              <button @click="openModal" type="button" class="btn btn-dark">
-                Забронювати
-              </button>
-              <button @click="startChat" type="button" class="btn btn-success">
-                Розпочати чат
-              </button>
-              <button @click="openModalReview" type="button" class="btn btn-warning">
-                Залишити відгук
-              </button>
-              <button @click="openReviewsModal" type="button" class="btn btn-warning">
-                Переглянути відгуки
-              </button>
-            </div>
-          </section>
-        </div>
-
-        <div class="d-flex flex-column">
-          <h1 v-if="ad.title">{{ ad.title }}</h1>
-          <span v-else></span>
-
-          <div class="d-flex flex-row">
-            <p>Гості: {{ ad.guest_count }}</p>
-            <span>·</span>
-
-            <p>{{ getPremTypeLabel(ad.prem_type) }}</p>
-
-            <span>·</span>
-            <p>{{ getAccomTypeLabel(ad.accom_type) }}</p>
+            </section>
           </div>
-
-          <h1>Ціна: {{ ad.price }} грн/ніч</h1>
-
-          <div v-if="averageRating !== null">
-            <h3>Середній рейтинг: {{ averageRating.toFixed(1) }} ⭐</h3>
-          </div>
-          <span v-else>Немає відгуків для цього оголошення</span>
-
-          <p v-if="ad.description">Опис: {{ ad.description }}</p>
-          <span v-else></span>
-
-          <p>Зручності для гостей</p>
-
-          <section id="conven" class="conven-grid">
-            <div
-              v-for="(convenience, index) in ad.conveniences"
-              :key="index"
-              class="conven-card"
-            >
-              <img
-                v-if="convenience.name === 'shower'"
-                src="../assets/img/shower_icon.png"
-                alt="Shower"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'wifi'"
-                src="../assets/img/wifi_icon.png"
-                alt="Wi-Fi"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'kitchen'"
-                src="../assets/img/cutlery_icon.png"
-                alt="kitchen"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'pets'"
-                src="../assets/img/paw_icon.png"
-                alt="pets allowed"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'conditioner'"
-                src="../assets/img/snowflake_icon.png"
-                alt="air conditioning"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'breakfast'"
-                src="../assets/img/breakfast_icon.png"
-                alt="breakfast"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'heating'"
-                src="../assets/img/heating_icon.png"
-                alt="heating"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'television'"
-                src="../assets/img/television_icon.png"
-                alt="television"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'work_place'"
-                src="../assets/img/laptop_icon.png"
-                alt="work place"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'parking'"
-                src="../assets/img/parking_icon.png"
-                alt="parking"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'washing_machine'"
-                src="../assets/img/washing_machine_icon.png"
-                alt="washing machine"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'medicine_chest'"
-                src="../assets/img/medicine_chest_icon.png"
-                alt="medicine chest"
-                class="conven-img"
-              />
-              <img
-                v-else-if="convenience.name === 'fire_extinguisher'"
-                src="../assets/img/fire_extinguisher_icon.png"
-                alt="fire extinguisher"
-                class="conven-img"
-              />
-              <div v-if="convenience.name === 'shower'">
-                <p>Душ</p>
-              </div>
-              <div v-else-if="convenience.name === 'wifi'">
-                <p>Wi-Fi</p>
-              </div>
-              <div v-else-if="convenience.name === 'kitchen'">
-                <p>Кухня</p>
-              </div>
-              <div v-else-if="convenience.name === 'television'">
-                <p>Телевізор</p>
-              </div>
-              <div v-else-if="convenience.name === 'pets'">
-                <p>Можна з тваринами</p>
-              </div>
-              <div v-else-if="convenience.name === 'work_place'">
-                <p>Робоче місце</p>
-              </div>
-              <div v-else-if="convenience.name === 'conditioner'">
-                <p>Кондиціонер</p>
-              </div>
-              <div v-else-if="convenience.name === 'heating'">
-                <p>Опалення</p>
-              </div>
-              <div v-else-if="convenience.name === 'parking'">
-                <p>Паркування</p>
-              </div>
-              <div v-else-if="convenience.name === 'breakfast'">
-                <p>Сніданок</p>
-              </div>
-              <div v-else-if="convenience.name === 'washing_machine'">
-                <p>Пральна машина</p>
-              </div>
-              <div v-else-if="convenience.name === 'medicine_chest'">
-                <p>Аптечка</p>
-              </div>
-              <div v-else-if="convenience.name === 'fire_extinguisher'">
-                <p>Вогнегасник</p>
-              </div>
-            </div>
-          </section>
         </div>
       </div>
-    </div>
+    </main>
     <Footer />
 
     <Reservation :showModal="showModal" :ad="ad" @close-modal="closeModal" />
@@ -402,7 +406,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+#ad-details-load,
+#main-renter-load {
+  position: absolute;
+  margin-left: 40%;
+}
+
+#main-ad-details {
+  display: grid;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: -5%;
+}
+
 #reserv-btn {
   padding-left: 100%;
   width: 250%;
@@ -428,6 +445,9 @@ export default {
 
 #conven {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .conven-card {

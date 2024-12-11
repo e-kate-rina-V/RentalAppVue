@@ -4,7 +4,7 @@
       <Head />
 
       <section id="auth-section">
-        <button @click="openModal" class="btn btn-dark">Авторизація</button>
+        <button id="auth-btn" @click="openModal" class="btn btn-dark">Авторизація</button>
       </section>
     </header>
 
@@ -130,12 +130,16 @@ header {
   display: grid;
   justify-content: center;
   margin-top: 1%;
-  gap: 30%;
+  gap: 10%;
 }
 
 main {
   flex: 1;
   padding-top: 80px;
+}
+
+#auth-btn {
+  margin-left: 300px;
 }
 
 #conven {

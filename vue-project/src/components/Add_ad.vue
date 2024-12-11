@@ -330,7 +330,9 @@
         ></button>
         <div id="choice-form">
           <h2>Додайте титульну назву та адресу</h2>
-          <span>Наприклад: двоповерховий будинок у центрі міста, Київ</span>
+          <span id="title-span"
+            >Наприклад: двоповерховий будинок у центрі міста, Київ</span
+          >
           <textarea
             id="title-input"
             name="title"
@@ -702,6 +704,10 @@ export default {
 
 #cont-btn {
   margin-top: 3%;
+}
+
+#title-span {
+  margin-right: 24%;
 }
 
 #description-input,

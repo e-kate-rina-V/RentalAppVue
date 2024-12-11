@@ -2,23 +2,26 @@
   <div class="page-container">
     <header id="header">
       <Head />
-
-      <section id="add-btn-section">
-        <button @click="goToAds" class="btn btn-dark" type="button">
-          Мої оголошення
-        </button>
-        <button @click="openModal" class="btn btn-dark" type="button">
-          Розмістити оголошення
-        </button>
-        <button class="btn btn-dark" type="button" @click="logout">Вийти</button>
-        <button class="btn btn-dark" type="button" @click="handleReportAction">
-          Завантажити звіт
-        </button>
-      </section>
     </header>
 
     <main id="main-landlord-body">
-      <p v-if="message" class="report-message">{{ message }}</p>
+      <section id="add-btn-section">
+        <button @click="openModal" class="btn btn-dark" type="button">
+          Розмістити оголошення
+        </button>
+        <button @click="goToAds" class="btn btn-dark" type="button">
+          Мої оголошення
+        </button>
+        <button class="btn btn-dark" type="button" @click="logout">Вийти</button>
+        <button class="btn btn-dark" type="button" @click="handleReportAction">
+          Згенерувати звіт
+        </button>
+        <p v-if="message" class="report-message">{{ message }}</p>
+        <span
+          >*Ви можете згенерувати та завантажити звіт з отриманого прибутку за поточний
+          місяць</span
+        >
+      </section>
     </main>
 
     <Add_ad :showModal="showModal" @close-modal="closeModal" />
@@ -75,9 +78,9 @@ export default {
       try {
         await generateReport();
         isReportGenerated.value = true;
-        message.value = "Отчет генерируется...";
+        message.value = "Звіт генерується...";
       } catch (error) {
-        message.value = "Ошибка при генерации отчета.";
+        message.value = "Помилка при генерації звіту";
         console.error(error);
       }
     };
@@ -122,19 +125,23 @@ export default {
 
 <style scoped>
 #add-btn-section {
-  display: flex;
-  gap: 5%;
+  display: grid;
+  gap: 10%;
   text-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
 }
 
 #add-btn-section button {
   padding: 7px 18px;
+  width: 50%;
 }
 
 .report-message {
-  margin: 20px;
+  margin-left: 100px;
   color: #333;
-  font-size: 16px;
   text-align: center;
+  font-size: 16px;
 }
 </style>
