@@ -37,6 +37,9 @@ export const loginUser = async (data) => {
     }
 };
 
+export const resendVerification = () => api.post("/email/verify-notification");
+
+
 export const logoutUser = async () => {
     try {
         const response = await api.post('logout', {}, {
@@ -73,7 +76,6 @@ export const fetchUserAds = async (page = 1, perPage = 5) => {
         throw error;
     }
 };
-
 
 export const fetchAdById = async (id) => {
     try {
@@ -119,6 +121,11 @@ export const reserveAd = async (formData) => {
     }
 };
 
+export const getUnavailableDates = async (adId) => {
+    const response = await api.get(`/ads/${adId}/unavailable-dates`);
+    return response;
+  };
+  
 export const submitReview = async (adId, ratings, reviews, averageRating) => {
     try {
         const payload = {

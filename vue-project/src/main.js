@@ -3,6 +3,8 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router.js';
+import 'flatpickr/dist/flatpickr.css';
+
 
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";

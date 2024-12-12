@@ -525,7 +525,7 @@ export default {
 
 #renter-head #exit-btn {
   padding: 5px 30px;
-  margin-left: 390px;
+  margin-left: 360px;
 }
 
 .dropdown {

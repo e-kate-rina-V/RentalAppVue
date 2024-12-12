@@ -2,25 +2,70 @@
   <div>
     <div v-if="showModal" class="modal">
       <div class="card-choice">
-        <form v-if="!showForm && !isLoginMode" class="modal-content" @submit.prevent="selectRole">
+        <div v-if="awaitingEmailVerification" class="verify-email">
+          <h2>Подтвердите ваш email</h2>
+          <p>Мы отправили письмо на адрес {{ formData.email }}.</p>
+          <p>
+            Пожалуйста, проверьте почту и перейдите по ссылке для завершения регистрации.
+          </p>
+          <button @click="resendVerificationEmail" class="btn btn-primary">
+            Отправить письмо повторно
+          </button>
+          <p v-if="resendSuccess" class="success-message">Письмо успешно отправлено!</p>
+          <p v-if="resendError" class="error-message">
+            {{ resendError }}
+          </p>
+          <button @click="closeModal" class="btn btn-secondary">Закрыть</button>
+        </div>
+
+        <div v-if="registrationSuccess" class="success-message">
+          <h2>Регистрация успешна!</h2>
+          <p>
+            Мы отправили письмо на адрес {{ formData.email }}. Пожалуйста, подтвердите ваш
+            email.
+          </p>
+          <button @click="closeModal" class="btn btn-primary">Закрыть</button>
+        </div>
+
+        <form
+          v-if="!awaitingEmailVerification && !showForm && !isLoginMode"
+          class="modal-content"
+          @submit.prevent="selectRole"
+        >
           <div id="choice-form">
             <div class="container text-center">
               <div class="d-flex justify-content-around">
-                <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
+                <button
+                  type="button"
+                  class="btn-close"
+                  aria-label="Close"
+                  @click="closeModal"
+                ></button>
               </div>
               <h2>Оберіть роль</h2>
             </div>
-
             <div class="btn-gr" role="group">
               <div class="d-flex flex-column align-items-center; role-btn">
-                <img class="conven-img" src="../assets/img/renter_icon.png" alt="renter_icon" />
+                <img
+                  class="conven-img"
+                  src="../assets/img/renter_icon.png"
+                  alt="renter_icon"
+                />
                 <button class="btn btn-dark" type="button" @click="selectRole('renter')">
                   Орендатор
                 </button>
               </div>
               <div class="d-flex flex-column align-items-center; role-btn">
-                <img class="conven-img" src="../assets/img/landlord_icon.png" alt="landlord_icon" />
-                <button class="btn btn-dark" type="button" @click="selectRole('landlord')">
+                <img
+                  class="conven-img"
+                  src="../assets/img/landlord_icon.png"
+                  alt="landlord_icon"
+                />
+                <button
+                  class="btn btn-dark"
+                  type="button"
+                  @click="selectRole('landlord')"
+                >
                   Орендодавець
                 </button>
               </div>
@@ -29,32 +74,65 @@
           </div>
         </form>
 
-        <form v-if="showForm && !isLoginMode" id="register-form" class="card" @submit.prevent="submitRegistrationForm">
-          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
+        <form
+          v-if="!awaitingEmailVerification && showForm && !isLoginMode"
+          id="register-form"
+          class="card"
+          @submit.prevent="submitRegistrationForm"
+        >
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            @click="closeModal"
+          ></button>
           <h2>Registration</h2>
           <p>Your choice: {{ role }}</p>
           <div>
             <label for="name">Name:</label>
-            <input class="form-control" type="text" id="name" v-model="formData.name" required />
+            <input
+              class="form-control"
+              type="text"
+              id="name"
+              v-model="formData.name"
+              required
+            />
             <span v-if="validationErrors.name" class="error">{{
               validationErrors.name[0]
             }}</span>
 
             <label for="email">Email:</label>
-            <input class="form-control" type="email" id="email" v-model="formData.email" required />
+            <input
+              class="form-control"
+              type="email"
+              id="email"
+              v-model="formData.email"
+              required
+            />
             <span v-if="validationErrors.email" class="error">{{
               validationErrors.email[0]
             }}</span>
 
             <label for="password">Password:</label>
-            <input class="form-control" type="password" id="password" v-model="formData.password" required />
+            <input
+              class="form-control"
+              type="password"
+              id="password"
+              v-model="formData.password"
+              required
+            />
             <span v-if="validationErrors.password" class="error">{{
               validationErrors.password[0]
             }}</span>
 
             <label for="confirm_password">Confirm password:</label>
-            <input class="form-control" type="password" id="confirm_password" v-model="formData.password_confirmation"
-              required />
+            <input
+              class="form-control"
+              type="password"
+              id="confirm_password"
+              v-model="formData.password_confirmation"
+              required
+            />
             <span v-if="validationErrors.password_confirmation" class="error">{{
               validationErrors.password_confirmation[0]
             }}</span>
@@ -69,19 +147,40 @@
           <p @click="switchMode" class="switch-mode">I already have an account</p>
         </form>
 
-        <form v-if="isLoginMode" id="login-form" class="card" @submit.prevent="submitLoginForm">
-          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
+        <form
+          v-if="!awaitingEmailVerification && isLoginMode"
+          id="login-form"
+          class="card"
+          @submit.prevent="submitLoginForm"
+        >
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            @click="closeModal"
+          ></button>
           <h2>Authorization</h2>
           <div>
             <label for="email">Email:</label>
-            <input class="form-control" type="email" id="email" v-model="loginData.email" required />
+            <input
+              class="form-control"
+              type="email"
+              id="email"
+              v-model="loginData.email"
+              required
+            />
             <span v-if="validationErrors.email" class="error">{{
               validationErrors.email[0]
             }}</span>
 
             <label for="password">Password:</label>
-            <input class="form-control" type="password" id="password" v-model="loginData.password" required />
-
+            <input
+              class="form-control"
+              type="password"
+              id="password"
+              v-model="loginData.password"
+              required
+            />
             <span v-if="validationErrors.auth" class="error">{{
               validationErrors.auth[0]
             }}</span>
@@ -103,7 +202,7 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { registerUser, loginUser } from "../api/api.js";
+import { registerUser, loginUser, resendVerification } from "../api/api.js";
 import {
   validateName,
   validateEmail,
@@ -120,6 +219,10 @@ export default {
     const router = useRouter();
     const showForm = ref(false);
     const isLoginMode = ref(false);
+    const awaitingEmailVerification = ref(false);
+    const resendSuccess = ref(false);
+    const resendError = ref("");
+    const registrationSuccess = ref(false);
     const role = ref("");
     const formData = ref({
       name: "",
@@ -149,16 +252,15 @@ export default {
         password: "",
       };
       validationErrors.value = {};
+      awaitingEmailVerification.value = false;
+      registrationSuccess.value = false;
+      resendSuccess.value = false;
+      resendError.value = "";
     };
 
     const closeModal = () => {
       resetForm();
       emit("close-modal");
-    };
-
-    const switchMode = () => {
-      isLoginMode.value = !isLoginMode.value;
-      showForm.value = false;
     };
 
     const selectRole = (selectedRole) => {
@@ -167,12 +269,8 @@ export default {
       showForm.value = true;
     };
 
-    const handleValidationErrors = (error) => {
-      if (error.response && error.response.status === 422) {
-        validationErrors.value = error.response.data.errors || {};
-      } else {
-        console.error("Error:", error.message || error);
-      }
+    const switchMode = () => {
+      isLoginMode.value = !isLoginMode.value;
     };
 
     const submitRegistrationForm = async () => {
@@ -187,7 +285,7 @@ export default {
 
       if (nameError) validationErrors.value.name = [nameError];
       if (emailError) validationErrors.value.email = [emailError];
-      if (passwordError) validationErrors.value.password = [passwordError];
+      if (passwordError) validationErrors.value.password_confirmation = [passwordError];
 
       if (Object.keys(validationErrors.value).length > 0) {
         return;
@@ -198,16 +296,34 @@ export default {
 
         console.log("Registration response:", response);
 
-        if (response && response.user) {
-          alert("Registration was successful");
-          router.push("/home");
-          closeModal();
+        alert("Registration was successful! We have sent a letter to your email.");
+
+        closeModal();
+
+        if (response && response.message === "Verification email sent") {
+          awaitingEmailVerification.value = true;
+          registrationSuccess.value = true;
         } else {
-          throw new Error("User data not found in response");
+          throw new Error("Unexpected server response");
         }
       } catch (error) {
         console.error("Error during registration:", error);
-        handleValidationErrors(error);
+        if (error.response && error.response.status === 422) {
+          validationErrors.value = error.response.data.errors || {};
+        }
+      }
+    };
+
+    const resendVerificationEmail = async () => {
+      resendSuccess.value = false;
+      resendError.value = "";
+
+      try {
+        await resendVerification();
+        resendSuccess.value = true;
+      } catch (error) {
+        console.error("Error resending verification email:", error);
+        resendError.value = "Failed to resend verification email. Please try again.";
       }
     };
 
@@ -224,6 +340,7 @@ export default {
         validationErrors.value.email = ["Please enter a valid email address"];
         return;
       }
+
       try {
         const response = await loginUser(loginData.value);
 
@@ -232,10 +349,9 @@ export default {
         alert("Login was successful");
 
         const userRole = user.role;
-        if (user.role === 'admin') {
-          router.push('/');
-        }
-        else if (userRole === "renter") {
+        if (user.role === "admin") {
+          router.push("/");
+        } else if (userRole === "renter") {
           router.push("/renter");
         } else if (userRole === "landlord") {
           router.push("/landlord");
@@ -260,15 +376,20 @@ export default {
     return {
       showForm,
       isLoginMode,
+      awaitingEmailVerification,
+      registrationSuccess,
+      resendSuccess,
+      resendError,
       role,
       formData,
       loginData,
       validationErrors,
       closeModal,
-      switchMode,
       selectRole,
+      switchMode,
       submitRegistrationForm,
       submitLoginForm,
+      resendVerificationEmail,
     };
   },
 };

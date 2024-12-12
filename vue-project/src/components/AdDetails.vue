@@ -23,7 +23,7 @@
 
         <div v-else>
           <div class="d-flex flex-row">
-            <section>
+            <section id="carousel-container">
               <div
                 v-if="ad.materials && ad.materials.length > 0"
                 id="adCarousel"
@@ -88,7 +88,7 @@
                 <button @click="openModalReview" type="button" class="btn btn-warning">
                   Залишити відгук
                 </button>
-                <button @click="openReviewsModal" type="button" class="btn btn-warning">
+                <button @click="openReviewsModal" type="button" class="btn btn-secondary">
                   Переглянути відгуки
                 </button>
               </div>
@@ -420,9 +420,15 @@ export default {
   margin-top: -5%;
 }
 
+#carousel-container {
+  position: relative;
+}
+
 #reserv-btn {
-  padding-left: 100%;
-  width: 250%;
+  display: block;
+  position: absolute;
+  margin-left: 10%;
+  width: 18%;
   gap: 18px;
 }
 

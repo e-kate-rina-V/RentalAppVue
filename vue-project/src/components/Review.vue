@@ -1,32 +1,51 @@
 <template>
   <div v-if="showModalReview" class="modal">
     <form class="review-form" @submit.prevent="submitReviewHandler">
-      <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        @click="closeModal"
+      ></button>
 
-      <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      />
       <div class="form-group">
         <div class="container text-start">
           <div class="row row-cols-2">
             <div>
               <label>Чистота</label>
-              <StarRating :id="'cleanliness'" :currentRating="ratings.cleanliness"
-                @update:rating="updateRating('cleanliness', $event)" />
+              <StarRating
+                :id="'cleanliness'"
+                :currentRating="ratings.cleanliness"
+                @update:rating="updateRating('cleanliness', $event)"
+              />
             </div>
             <div>
               <label>Робота персоналу</label>
-              <StarRating :id="'staffWork'" :currentRating="ratings.staffWork"
-                @update:rating="updateRating('staffWork', $event)" />
+              <StarRating
+                :id="'staffWork'"
+                :currentRating="ratings.staffWork"
+                @update:rating="updateRating('staffWork', $event)"
+              />
             </div>
             <div>
               <label>Розташування</label>
-              <StarRating :id="'location'" :currentRating="ratings.location"
-                @update:rating="updateRating('location', $event)" />
+              <StarRating
+                :id="'location'"
+                :currentRating="ratings.location"
+                @update:rating="updateRating('location', $event)"
+              />
             </div>
             <div>
               <label>Співвідношення ціна/якість</label>
-              <StarRating :id="'valueForMoney'" :currentRating="ratings.valueForMoney"
-                @update:rating="updateRating('valueForMoney', $event)" />
+              <StarRating
+                :id="'valueForMoney'"
+                :currentRating="ratings.valueForMoney"
+                @update:rating="updateRating('valueForMoney', $event)"
+              />
             </div>
           </div>
 
@@ -37,20 +56,32 @@
           <div class="reviews">
             <section class="d-flex flex-column">
               <span>Які були плюси під час перебування ?</span>
-              <input id="review-plus-input" placeholder="Напишіть плюси тут..." v-model="reviews.positive" />
+              <input
+                id="review-plus-input"
+                placeholder="Напишіть плюси тут..."
+                v-model="reviews.positive"
+              />
             </section>
             <section class="d-flex flex-column">
               <span>Які були мінуси під час перебування ?</span>
-              <input id="review-minus-input" placeholder="Напишіть мінуси тут..." v-model="reviews.negative" />
+              <input
+                id="review-minus-input"
+                placeholder="Напишіть мінуси тут..."
+                v-model="reviews.negative"
+              />
             </section>
             <section class="d-flex flex-column">
               <span>Додайте ваш відгук</span>
-              <input id="review-input" placeholder="Ваш відгук..." v-model="reviews.comment" />
+              <input
+                id="review-input"
+                placeholder="Ваш відгук..."
+                v-model="reviews.comment"
+              />
             </section>
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Надіслати відгук</button>
+      <button type="submit" id="review-btn" class="btn btn-dark">Надіслати відгук</button>
     </form>
   </div>
 </template>
@@ -101,8 +132,12 @@ export default {
     };
 
     const averageRating = computed(() => {
-      const totalRatings = Object.values(ratings).reduce((sum, rating) => sum + rating, 0);
-      const numberOfRatings = Object.values(ratings).filter((rating) => rating > 0).length;
+      const totalRatings = Object.values(ratings).reduce(
+        (sum, rating) => sum + rating,
+        0
+      );
+      const numberOfRatings = Object.values(ratings).filter((rating) => rating > 0)
+        .length;
       return numberOfRatings > 0 ? (totalRatings / numberOfRatings).toFixed(1) : "0.0";
     });
 
@@ -145,8 +180,6 @@ export default {
       }
     };
 
-
-
     return {
       ratings,
       reviews,
@@ -159,8 +192,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style>
 .reviews {
@@ -183,5 +214,10 @@ export default {
   font-size: 1.2rem;
   font-weight: bold;
   color: #ffb300;
+}
+
+#review-btn {
+  margin-top: 3%;
+  margin-left: 2%;
 }
 </style>

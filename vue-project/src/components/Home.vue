@@ -139,7 +139,7 @@ main {
 }
 
 #auth-btn {
-  margin-left: 300px;
+  margin-left: 250px;
 }
 
 #conven {

@@ -4,14 +4,31 @@
       <div class="container text-start">
         <div class="d-flex flex-row">
           <h3 v-if="ad">₴ {{ ad.price }} ніч</h3>
-          <button type="button" class="btn-close" aria-label="Close" @click="closeModal"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            @click="closeModal"
+          ></button>
         </div>
 
         <div class="date-picker">
           <div class="row row-cols-2">
             <div class="d-flex flex-column">
               <label for="arrival-date">Прибуття</label>
-              <flatpickr v-model="formData.arrival_date" placeholder="Оберіть дату" />
+              <flatpickr
+                v-model="formData.arrival_date"
+                placeholder="Оберіть дату"
+                :config="{
+                  disable: [
+                    function (date) {
+                      return date < new Date().setHours(0, 0, 0, 0);
+                    },
+                    ...unavailableDates,
+                  ],
+                  dateFormat: 'Y-m-d',
+                }"
+              />
               <div v-if="errors.arrival_date" class="error-message">
                 {{ errors.arrival_date }}
               </div>
@@ -19,7 +36,19 @@
 
             <div class="d-flex flex-column">
               <label for="departure-date">Виїзд</label>
-              <flatpickr v-model="formData.depart_date" placeholder="Оберіть дату" />
+              <flatpickr
+                v-model="formData.depart_date"
+                placeholder="Оберіть дату"
+                :config="{
+                  disable: [
+                    function (date) {
+                      return date < new Date().setHours(0, 0, 0, 0);
+                    },
+                    ...unavailableDates,
+                  ],
+                  dateFormat: 'Y-m-d',
+                }"
+              />
               <div v-if="errors.depart_date" class="error-message">
                 {{ errors.depart_date }}
               </div>
@@ -37,11 +66,19 @@
               <h6>Дорослі</h6>
               <p>Вік: від 13 років</p>
               <div id="guest_controls" class="d-flex flex-row">
-                <button class="guest-btn" type="button" @click="changeGuestCount('guestAdultCount', 'decrease')">
+                <button
+                  class="guest-btn"
+                  type="button"
+                  @click="changeGuestCount('guestAdultCount', 'decrease')"
+                >
                   −
                 </button>
                 <span class="guest-value">{{ formData.guestAdultCount }}</span>
-                <button class="guest-btn" type="button" @click="changeGuestCount('guestAdultCount', 'increase')">
+                <button
+                  class="guest-btn"
+                  type="button"
+                  @click="changeGuestCount('guestAdultCount', 'increase')"
+                >
                   +
                 </button>
               </div>
@@ -50,11 +87,19 @@
               <h6>Діти</h6>
               <p>Вік: від 2 до 12 років</p>
               <div id="guest_controls" class="d-flex align-items-center">
-                <button class="guest-btn" type="button" @click="changeGuestCount('guestChildrenCount', 'decrease')">
+                <button
+                  class="guest-btn"
+                  type="button"
+                  @click="changeGuestCount('guestChildrenCount', 'decrease')"
+                >
                   −
                 </button>
                 <span class="guest-value">{{ formData.guestChildrenCount }}</span>
-                <button class="guest-btn" type="button" @click="changeGuestCount('guestChildrenCount', 'increase')">
+                <button
+                  class="guest-btn"
+                  type="button"
+                  @click="changeGuestCount('guestChildrenCount', 'increase')"
+                >
                   +
                 </button>
               </div>
@@ -63,25 +108,43 @@
               <h6>Немовля</h6>
               <p>Вік: до 2 років</p>
               <div id="guest_controls" class="d-flex align-items-center">
-                <button class="guest-btn" type="button" @click="changeGuestCount('guestBabyCount', 'decrease')">
+                <button
+                  class="guest-btn"
+                  type="button"
+                  @click="changeGuestCount('guestBabyCount', 'decrease')"
+                >
                   −
                 </button>
                 <span class="guest-value">{{ formData.guestBabyCount }}</span>
-                <button class="guest-btn" type="button" @click="changeGuestCount('guestBabyCount', 'increase')">
+                <button
+                  class="guest-btn"
+                  type="button"
+                  @click="changeGuestCount('guestBabyCount', 'increase')"
+                >
                   +
                 </button>
               </div>
             </section>
             <section>
               <h6>Домашні тварини</h6>
-              <div v-if="ad.conveniences && ad.conveniences.some((c) => c.name === 'pets')">
+              <div
+                v-if="ad.conveniences && ad.conveniences.some((c) => c.name === 'pets')"
+              >
                 <div id="guest_controls" class="d-flex align-items-center">
-                  <button class="guest-btn" type="button" @click="changeGuestCount('guestPets', 'decrease')"
-                    :disabled="formData.guestPets === 0">
+                  <button
+                    class="guest-btn"
+                    type="button"
+                    @click="changeGuestCount('guestPets', 'decrease')"
+                    :disabled="formData.guestPets === 0"
+                  >
                     −
                   </button>
                   <span class="guest-value">{{ formData.guestPets }}</span>
-                  <button class="guest-btn" type="button" @click="changeGuestCount('guestPets', 'increase')">
+                  <button
+                    class="guest-btn"
+                    type="button"
+                    @click="changeGuestCount('guestPets', 'increase')"
+                  >
                     +
                   </button>
                 </div>
@@ -114,7 +177,7 @@
 import { reactive, computed, ref, watch } from "vue";
 import flatpickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
-import { reserveAd } from "@/api/api.js";
+import { reserveAd, getUnavailableDates } from "@/api/api.js";
 import {
   validateArrivalDate,
   validateDepartureDate,
@@ -153,6 +216,30 @@ export default {
     });
 
     const reservationError = ref("");
+    const unavailableDates = ref([]);
+
+    const loadUnavailableDates = async () => {
+      try {
+        const response = await getUnavailableDates(props.ad.id);
+        unavailableDates.value = response.data.map((range) => {
+          return {
+            from: new Date(range.arrival_date),
+            to: new Date(range.depart_date),
+          };
+        });
+      } catch (error) {
+        console.error("Failed to load unavailable dates:", error);
+      }
+    };
+
+    watch(
+      () => props.showModal,
+      (newVal) => {
+        if (newVal) {
+          loadUnavailableDates();
+        }
+      }
+    );
 
     const calculateNights = computed(() => {
       if (formData.arrival_date && formData.depart_date) {
@@ -194,7 +281,8 @@ export default {
       formData.guestChildrenCount = 0;
       formData.guestBabyCount = 0;
       formData.guestPets = 0;
-    }
+    };
+
     const resetValidationErrors = () => {
       errors.arrival_date = "";
       errors.depart_date = "";
@@ -255,6 +343,7 @@ export default {
       submitReservation,
       errors,
       reservationError,
+      unavailableDates,
     };
   },
 };
@@ -308,5 +397,10 @@ export default {
   color: red;
   margin: 10px 0;
   font-size: 0.9rem;
+}
+
+.flatpickr-day.flatpickr-disabled {
+  text-decoration: line-through;
+  color: darkgrey;
 }
 </style>
