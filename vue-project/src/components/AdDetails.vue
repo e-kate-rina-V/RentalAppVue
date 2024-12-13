@@ -82,14 +82,17 @@
                 <button @click="openModal" type="button" class="btn btn-dark">
                   Забронювати
                 </button>
-                <button @click="startChat" type="button" class="btn btn-success">
-                  Розпочати чат
-                </button>
                 <button @click="openModalReview" type="button" class="btn btn-warning">
                   Залишити відгук
                 </button>
                 <button @click="openReviewsModal" type="button" class="btn btn-secondary">
                   Переглянути відгуки
+                </button>
+                <button @click="startChat" type="button" class="btn btn-success">
+                  Розпочати чат
+                </button>
+                <button @click="openMyChats" type="button" class="btn btn-danger">
+                  Мої чати
                 </button>
               </div>
             </section>
@@ -267,7 +270,7 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { fetchAdById, openChat, fetchReviewsByAdId } from "@/api/api.js";
+import { fetchAdById, openChat, fetchReviewsByAdId, fetchUserChats } from "@/api/api.js";
 import Head from "./vue_helpers/Head.vue";
 import Footer from "./vue_helpers/Footer.vue";
 import Reservation from "./Reservation.vue";
@@ -343,6 +346,15 @@ export default {
       return totalRating / reviews.value.length;
     });
 
+    const getUserChats = async () => {
+      try {
+        const response = await fetchUserChats(userId);
+        chats.value = response;
+      } catch (error) {
+        console.error("Ошибка при загрузке чатов пользователя:", error);
+      }
+    };
+
     const startChat = async () => {
       try {
         const chatData = await openChat(route.params.id);
@@ -352,8 +364,17 @@ export default {
       }
     };
 
+    const openMyChats = () => {
+      router.push("/chats");
+    };
+
+    onMounted(() => {
+      getUserChats();
+    });
+
     onMounted(() => {
       getAdDetails();
+      getUserChats();
     });
 
     const showModal = ref(false);
@@ -389,6 +410,7 @@ export default {
       ad,
       getPremTypeLabel,
       getAccomTypeLabel,
+      openMyChats,
       startChat,
       openModal,
       closeModal,

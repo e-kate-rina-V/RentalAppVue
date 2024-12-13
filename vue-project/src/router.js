@@ -5,6 +5,7 @@ import Home from './components/Home.vue';
 import PostedAds from './components/PostedAds.vue';
 import AdDetails from './components/AdDetails.vue';
 import Chat from './components/Chat.vue';
+import UserChats from './components/UserChats.vue';
 
 const routes = [
     {
@@ -30,7 +31,12 @@ const routes = [
     {
         path: '/chat/:chatId',
         name: 'chat',
-        component: Chat,  
+        component: Chat,
+    },
+    {
+        path: '/chats',
+        name: 'UserChats',
+        component: UserChats,
     },
     {
         path: '/home',

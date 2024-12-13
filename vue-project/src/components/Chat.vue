@@ -1,37 +1,45 @@
 <template>
   <div class="chat-container">
+    <div class="chat-title">
+      <h2>{{ chatTitle }}</h2>
+    </div>
+
     <div class="messages" ref="messagesContainer">
       <div v-if="messages.length > 0">
-        <div v-for="message in messages" :key="message.id" class="message">
-          <div
-            :class="
-              message.sender_id === currentUserId ? 'message-sent' : 'message-received'
-            "
-          >
-            <span class="message-sender">{{ message.user_id }}</span>
-            <p class="message-content">{{ message.message }}</p>
-          </div>
+        <div
+          v-for="message in messages"
+          :key="message.id"
+          :class="getMessageClass(message)"
+        >
+          <span class="message-sender">
+            {{
+              message.user_id === currentUserId.value
+                ? "Ви"
+                : message.user_name || "Неизвестный пользователь"
+            }}
+          </span>
+
+          <p class="message-content">{{ message.message }}</p>
         </div>
       </div>
       <div v-else>
         <p>Нет сообщений</p>
       </div>
-
-      <div class="chat-input">
-        <input
-          v-model="newMessage"
-          @keyup.enter="sendMessage"
-          type="text"
-          placeholder="Введите сообщение..."
-        />
-        <button @click="sendMessage">Отправить</button>
-      </div>
+    </div>
+    <div class="chat-input">
+      <input
+        v-model="newMessage"
+        @keyup.enter="sendMessage"
+        type="text"
+        placeholder="Введите сообщение..."
+      />
+      <button @click="sendMessage">Отправить</button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, watch, nextTick } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { fetchMessages, sendMessageAPI } from "@/api/api.js";
 
@@ -40,31 +48,38 @@ export default {
   setup() {
     const route = useRoute();
     const chatId = route.params.chatId;
-    const currentUserId = 1;
+    const currentUserId = ref(null);
     const messages = ref([]);
     const newMessage = ref("");
+    const messagesContainer = ref(null);
+    const chatTitle = ref("");
+
+    const scrollToBottom = () => {
+      nextTick(() => {
+        if (messagesContainer.value) {
+          messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+        }
+      });
+    };
 
     const getMessages = async () => {
       try {
         const response = await fetchMessages(chatId);
-        console.log("API Response:", response);
-
-        if (response && Array.isArray(response.messages)) {
-          messages.value = response.messages;
+        if (response) {
+          currentUserId.value = response.current_user_id;
+          chatTitle.value = response.chat_title;
+          messages.value = response.messages.map((msg) => ({
+            id: msg.id,
+            user_id: msg.user_id,
+            user_name: msg.user_name,
+            message: msg.message,
+          }));
         } else {
           console.error("Сообщения не найдены или неправильный формат данных");
-          messages.value = [];
         }
-
-        nextTick(() => {
-          const messagesContainer = document.querySelector(".messages");
-          if (messagesContainer) {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          }
-        });
+        scrollToBottom();
       } catch (error) {
         console.error("Ошибка при загрузке сообщений:", error);
-        messages.value = [];
       }
     };
 
@@ -72,17 +87,40 @@ export default {
       if (!newMessage.value.trim()) return;
 
       try {
-        await sendMessageAPI(chatId, newMessage.value, currentUserId);
+        const message = await sendMessageAPI(chatId, newMessage.value);
+        messages.value.push({
+          id: message.id,
+          user_id: currentUserId.value,
+          user_name: "Ви",
+          message: newMessage.value,
+        });
         newMessage.value = "";
-        await getMessages();
+        scrollToBottom();
       } catch (error) {
         console.error("Ошибка при отправке сообщения:", error);
       }
     };
 
+    const getMessageClass = (message) => {
+      return [
+        message.user_id === currentUserId.value ? "message-sent" : "message-received",
+        "message",
+      ];
+    };
+
     onMounted(() => {
       getMessages();
       setInterval(getMessages, 5000);
+
+      window.Echo.private(`chat.${chatId}`).listen(".message.sent", (event) => {
+        messages.value.push({
+          id: event.message.id,
+          user_id: event.message.user_id,
+          user_name: event.message.user_name,
+          message: event.message.message,
+        });
+        scrollToBottom();
+      });
     });
 
     return {
@@ -90,16 +128,20 @@ export default {
       newMessage,
       sendMessage,
       currentUserId,
+      messagesContainer,
+      getMessageClass,
+      chatTitle,
     };
   },
 };
 </script>
 
-<style scoped>
+<style>
 .chat-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 70%;
   background-color: #f4f4f4;
 }
 
@@ -116,14 +158,32 @@ export default {
 
 .message-sent {
   text-align: right;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .message-received {
   text-align: left;
+  display: flex;
+  justify-content: flex-start;
 }
 
-.message-sender {
-  font-weight: bold;
+.message-content {
+  max-width: 60%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+
+.message-sent .message-content {
+  background-color: #d1f7c4;
+  color: #000;
+}
+
+.message-received .message-content {
+  background-color: #f1f0f0;
+  color: #000;
 }
 
 .message-content {

@@ -271,6 +271,7 @@ export default {
 
     const switchMode = () => {
       isLoginMode.value = !isLoginMode.value;
+      validationErrors.value = {};
     };
 
     const submitRegistrationForm = async () => {
@@ -297,7 +298,6 @@ export default {
         console.log("Registration response:", response);
 
         alert("Registration was successful! We have sent a letter to your email.");
-
         closeModal();
 
         if (response && response.message === "Verification email sent") {
@@ -310,6 +310,10 @@ export default {
         console.error("Error during registration:", error);
         if (error.response && error.response.status === 422) {
           validationErrors.value = error.response.data.errors || {};
+        } else {
+          validationErrors.value.auth = [
+            "An unexpected error occurred. Please try again later.",
+          ];
         }
       }
     };
@@ -343,20 +347,16 @@ export default {
 
       try {
         const response = await loginUser(loginData.value);
-
         const user = response.user;
 
-        alert("Login was successful");
-
         const userRole = user.role;
-        if (user.role === "admin") {
+        if (userRole === "admin") {
           router.push("/");
         } else if (userRole === "renter") {
           router.push("/renter");
         } else if (userRole === "landlord") {
           router.push("/landlord");
         } else {
-          console.error("Unexpected user role:", userRole);
           validationErrors.value.auth = ["Unexpected user role"];
         }
 
@@ -365,7 +365,6 @@ export default {
         if (error.response && error.response.data && error.response.data.error) {
           validationErrors.value.auth = [error.response.data.error];
         } else {
-          console.error("Error:", error.message || error);
           validationErrors.value.auth = [
             "An unexpected error occurred. Please try again later.",
           ];
