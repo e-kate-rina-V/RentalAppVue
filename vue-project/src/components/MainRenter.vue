@@ -54,13 +54,13 @@
               class="list-group-item list-group-item-action"
               @click="sortAds('guests')"
             >
-              Можлива кількість гостей (від більшого до меншого)
+              Можлива кількість гостей (від меншого до більшого)
             </button>
             <button
               class="list-group-item list-group-item-action"
               @click="sortAds('guestsDesc')"
             >
-              Можлива кількість гостей (від меншого до більшого)
+              Можлива кількість гостей (від більшого до меншого)
             </button>
           </div>
 
@@ -440,95 +440,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.main-renter-body {
-  display: grid;
-  justify-content: flex-start;
-  align-items: center;
-  margin-left: 5%;
-  margin-bottom: 10%;
-}
-
-.ad-list img {
-  width: 30px;
-  height: 30px;
-}
-
-.ad-list button {
-  border: none;
-  outline: none;
-  background-color: white;
-}
-
-.sort-section {
-  position: relative;
-  margin-bottom: 10px;
-}
-
-.sort-dropdown {
-  position: absolute;
-  background-color: white;
-  width: 100%;
-  max-width: 300px;
-  border-radius: 8px;
-  padding: 5px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-.sort-dropdown .list-group-item {
-  padding: 12px 20px;
-  cursor: pointer;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  text-align: left;
-  border-radius: 8px;
-}
-
-.sort-dropdown .list-group-item:hover {
-  background-color: #f8f9fa;
-}
-
-.sort-dropdown .list-group-item:focus {
-  background-color: #f8f9fa;
-  box-shadow: none;
-}
-
-#search {
-  height: 30px;
-  padding: 5px;
-}
-
-.ad-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.ad-card-wrapper {
-  width: 100%;
-  min-width: 200px;
-  flex: 1 0 400px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-}
-
-.ad-card-wrapper {
-  max-width: 400px;
-}
-
-.form-check input {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  width: 18px;
-  height: 18px;
-}
-
-#renter-head #exit-btn {
-  padding: 5px 30px;
-  margin-left: 360px;
-}
-
-.dropdown {
-  width: 50%;
-}
-</style>

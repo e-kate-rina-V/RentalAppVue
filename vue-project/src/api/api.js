@@ -55,7 +55,7 @@ export const logoutUser = async () => {
 
 export const registerAd = async (formData) => {
     try {
-        const response = await api.post('ad_register', formData, {
+        const response = await api.post('ads/register', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -89,7 +89,7 @@ export const fetchAdById = async (id) => {
 
 export const fetchAllAds = async (page = 1, filters = {}, sort = '') => {
     try {
-        const response = await api.get('/all_ads', {
+        const response = await api.get('all_ads', {
             params: {
                 page,
                 premType: filters.premType,

@@ -122,26 +122,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#add-btn-section {
-  display: grid;
-  gap: 10%;
-  text-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5%;
-}
-
-#add-btn-section button {
-  padding: 7px 18px;
-  width: 50%;
-}
-
-.report-message {
-  margin-left: 100px;
-  color: #333;
-  text-align: center;
-  font-size: 16px;
-}
-</style>

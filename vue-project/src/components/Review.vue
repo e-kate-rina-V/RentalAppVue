@@ -192,32 +192,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.reviews {
-  margin-top: 5%;
-}
-
-.reviews input {
-  width: 65%;
-}
-
-.review-form {
-  width: 38%;
-}
-
-.review-form .btn-close {
-  margin-left: 95%;
-}
-
-.average-rating {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #ffb300;
-}
-
-#review-btn {
-  margin-top: 3%;
-  margin-left: 2%;
-}
-</style>
