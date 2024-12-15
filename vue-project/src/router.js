@@ -1,47 +1,40 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import MainLandlord from './components/MainLandlord.vue';
-import MainRenter from './components/MainRenter.vue';
-import Home from './components/Home.vue';
-import PostedAds from './components/PostedAds.vue';
-import AdDetails from './components/AdDetails.vue';
-import Chat from './components/Chat.vue';
-import UserChats from './components/UserChats.vue';
 
 const routes = [
     {
         path: '/landlord',
         name: 'MainLandlord',
-        component: MainLandlord,
+        component: () => import('@/components/MainLandlord.vue'),
     },
     {
         path: '/renter',
         name: 'MainRenter',
-        component: MainRenter,
+        component: () => import('@/components/MainRenter.vue'),
     },
     {
         path: '/ads',
         name: 'PostedAds',
-        component: PostedAds,
+        component: () => import('@/components/PostedAds.vue'),
     },
     {
         path: '/ads/:id',
         name: 'AdDetails',
-        component: AdDetails
+        component: () => import('@/components/AdDetails.vue'),
     },
     {
         path: '/chat/:chatId',
         name: 'chat',
-        component: Chat,
+        component: () => import('@/components/Chat.vue'),
     },
     {
         path: '/chats',
         name: 'UserChats',
-        component: UserChats,
+        component: () => import('@/components/UserChats.vue'),
     },
     {
         path: '/home',
         name: 'Home',
-        component: Home,
+        component: () => import('@/components/Home.vue'),
     },
     {
         path: '/',

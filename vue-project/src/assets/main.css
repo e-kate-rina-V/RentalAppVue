@@ -1,5 +1,79 @@
 @import './base.css';
 
+
+/* Head */
+
+#main-name {
+  display: flex;
+  align-items: center;
+  padding-bottom: 3%;
+  margin-left: 50%;
+}
+
+#main-icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* Footer */
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding-left: 5%;
+  display: grid;
+  gap: 20%;
+  color: whitesmoke;
+  background-color: black;
+  z-index: 2;
+}
+
+#footer-text {
+  gap: 10px;
+  padding-top: 1%;
+  align-items: baseline;
+}
+
+#footer-text a {
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+.footer-text a:hover {
+  text-decoration: underline;
+}
+
+/* StarRating */
+
+.star-rating {
+  font-size: 0;
+}
+
+.star-rating__wrap {
+  display: inline-block;
+  font-size: 1rem;
+  direction: rtl;
+}
+
+.star-rating__ico {
+  padding-left: 2px;
+  cursor: pointer;
+  color: #ffb300;
+  direction: ltr;
+}
+
+.star-rating__input {
+  display: none;
+}
+
+.star-rating__ico:hover:before,
+.star-rating__ico:hover ~ .star-rating__ico:before,
+.star-rating__input:checked ~ .star-rating__ico:before {
+  content: "\f005";
+}
+
 /* Home */
 
 .page-container {
@@ -501,12 +575,6 @@ main {
 .modal-content-prem-load .btn-close,
 .modal-content-prem-load-conven .btn-close {
   margin-left: 95%;
-}
-
-.error-message {
-  color: red;
-  margin: 10px 0;
-  font-size: 0.9rem;
 }
 
 /* AdDetails */

@@ -16,8 +16,8 @@
         <div class="conven-card">
           <img
             class="conven-img"
-            src="../assets/img/cutlery_icon.png"
-            alt="cutlery_icon"
+            src="../assets/img/kitchen_icon.png"
+            alt="kitchen_icon"
           />
           <p>Кухня</p>
         </div>
@@ -26,15 +26,15 @@
           <p>Wi-Fi</p>
         </div>
         <div class="conven-card">
-          <img class="conven-img" src="../assets/img/paw_icon.png" alt="paw_icon" />
+          <img class="conven-img" src="../assets/img/pets_icon.png" alt="pets_icon" />
           <p>Можна з тваринами</p>
         </div>
 
         <div class="conven-card">
           <img
             class="conven-img"
-            src="../assets/img/snowflake_icon.png"
-            alt="snowflake_icon"
+            src="../assets/img/conditioner_icon.png"
+            alt="conditioner_icon"
           />
           <p>Кондиціонування</p>
         </div>

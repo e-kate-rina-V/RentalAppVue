@@ -25,7 +25,7 @@
           <div class="d-flex flex-row">
             <section id="carousel-container">
               <div
-                v-if="ad.materials && ad.materials.length > 0"
+                v-if="ad.materials && ad.materials.length"
                 id="adCarousel"
                 class="carousel slide"
                 data-bs-ride="carousel"
@@ -131,122 +131,11 @@
                 class="conven-card"
               >
                 <img
-                  v-if="convenience.name === 'shower'"
-                  src="../assets/img/shower_icon.png"
-                  alt="Shower"
+                  :src="'../src/assets/img/' + convenience.name + '_icon.png'"
+                  :alt="convenience.name"
                   class="conven-img"
                 />
-                <img
-                  v-else-if="convenience.name === 'wifi'"
-                  src="../assets/img/wifi_icon.png"
-                  alt="Wi-Fi"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'kitchen'"
-                  src="../assets/img/cutlery_icon.png"
-                  alt="kitchen"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'pets'"
-                  src="../assets/img/paw_icon.png"
-                  alt="pets allowed"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'conditioner'"
-                  src="../assets/img/snowflake_icon.png"
-                  alt="air conditioning"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'breakfast'"
-                  src="../assets/img/breakfast_icon.png"
-                  alt="breakfast"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'heating'"
-                  src="../assets/img/heating_icon.png"
-                  alt="heating"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'television'"
-                  src="../assets/img/television_icon.png"
-                  alt="television"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'work_place'"
-                  src="../assets/img/laptop_icon.png"
-                  alt="work place"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'parking'"
-                  src="../assets/img/parking_icon.png"
-                  alt="parking"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'washing_machine'"
-                  src="../assets/img/washing_machine_icon.png"
-                  alt="washing machine"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'medicine_chest'"
-                  src="../assets/img/medicine_chest_icon.png"
-                  alt="medicine chest"
-                  class="conven-img"
-                />
-                <img
-                  v-else-if="convenience.name === 'fire_extinguisher'"
-                  src="../assets/img/fire_extinguisher_icon.png"
-                  alt="fire extinguisher"
-                  class="conven-img"
-                />
-                <div v-if="convenience.name === 'shower'">
-                  <p>Душ</p>
-                </div>
-                <div v-else-if="convenience.name === 'wifi'">
-                  <p>Wi-Fi</p>
-                </div>
-                <div v-else-if="convenience.name === 'kitchen'">
-                  <p>Кухня</p>
-                </div>
-                <div v-else-if="convenience.name === 'television'">
-                  <p>Телевізор</p>
-                </div>
-                <div v-else-if="convenience.name === 'pets'">
-                  <p>Можна з тваринами</p>
-                </div>
-                <div v-else-if="convenience.name === 'work_place'">
-                  <p>Робоче місце</p>
-                </div>
-                <div v-else-if="convenience.name === 'conditioner'">
-                  <p>Кондиціонер</p>
-                </div>
-                <div v-else-if="convenience.name === 'heating'">
-                  <p>Опалення</p>
-                </div>
-                <div v-else-if="convenience.name === 'parking'">
-                  <p>Паркування</p>
-                </div>
-                <div v-else-if="convenience.name === 'breakfast'">
-                  <p>Сніданок</p>
-                </div>
-                <div v-else-if="convenience.name === 'washing_machine'">
-                  <p>Пральна машина</p>
-                </div>
-                <div v-else-if="convenience.name === 'medicine_chest'">
-                  <p>Аптечка</p>
-                </div>
-                <div v-else-if="convenience.name === 'fire_extinguisher'">
-                  <p>Вогнегасник</p>
-                </div>
+                <div v-html="calculateConvenience(convenience)"></div>
               </div>
             </section>
           </div>
@@ -295,14 +184,14 @@ export default {
 
     const chatId = route.params.id;
 
-    const adPremTypes = [
+    const adPremTypes = computed(() => [
       { value: "hotel_room", label: "Кімната у готелі" },
       { value: "flat", label: "Квартира" },
       { value: "house", label: "Будинок" },
-    ];
+    ]);
 
     const getPremTypeLabel = (premType) => {
-      const type = adPremTypes.find((type) => type.value === premType);
+      const type = adPremTypes.value.find((type) => type.value === premType);
       return type ? type.label : "Невідомий тип";
     };
 
@@ -315,6 +204,27 @@ export default {
     const getAccomTypeLabel = (accomType) => {
       const type = adAccomTypes.find((type) => type.value === accomType);
       return type ? type.label : "Невідомий тип примешкання";
+    };
+
+    const calculateConvenience = (convenience) => {
+      const conveniencesMapping = {
+        shower: "Душ",
+        wifi: "Wi-Fi",
+        kitchen: "Кухня",
+        television: "Телевізор",
+        pets: "Можна з тваринами",
+        work_place: "Робоче місце",
+        conditioner: "Кондиціонер",
+        heating: "Опалення",
+        parking: "Паркування",
+        breakfast: "Сніданок",
+        washing_machine: "Пральна машина",
+        medicine_chest: "Аптечка",
+        fire_extinguisher: "Вогнегасник",
+      };
+
+      const label = conveniencesMapping[convenience.name] || "Невідомо";
+      return `<p>${label}</p>`;
     };
 
     const getAdDetails = async () => {
@@ -369,10 +279,6 @@ export default {
     };
 
     onMounted(() => {
-      getUserChats();
-    });
-
-    onMounted(() => {
       getAdDetails();
       getUserChats();
     });
@@ -410,6 +316,7 @@ export default {
       ad,
       getPremTypeLabel,
       getAccomTypeLabel,
+      calculateConvenience,
       openMyChats,
       startChat,
       openModal,

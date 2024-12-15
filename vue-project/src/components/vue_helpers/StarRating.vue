@@ -1,80 +1,22 @@
 <template>
   <div class="star-rating">
     <div class="star-rating__wrap">
-      <input
-        class="star-rating__input"
-        :id="'star-5-' + id"
-        type="radio"
-        :name="'rating-' + id"
-        :value="5"
-        @change="setRating(5)"
-        :checked="currentRating === 5"
-      />
-      <label
-        class="star-rating__ico fa fa-star-o fa-lg"
-        :for="'star-5-' + id"
-        title="Отлично"
-      ></label>
-
-      <input
-        class="star-rating__input"
-        :id="'star-4-' + id"
-        type="radio"
-        :name="'rating-' + id"
-        :value="4"
-        @change="setRating(4)"
-        :checked="currentRating === 4"
-      />
-      <label
-        class="star-rating__ico fa fa-star-o fa-lg"
-        :for="'star-4-' + id"
-        title="Хорошо"
-      ></label>
-
-      <input
-        class="star-rating__input"
-        :id="'star-3-' + id"
-        type="radio"
-        :name="'rating-' + id"
-        :value="3"
-        @change="setRating(3)"
-        :checked="currentRating === 3"
-      />
-      <label
-        class="star-rating__ico fa fa-star-o fa-lg"
-        :for="'star-3-' + id"
-        title="Удовлетворительно"
-      ></label>
-
-      <input
-        class="star-rating__input"
-        :id="'star-2-' + id"
-        type="radio"
-        :name="'rating-' + id"
-        :value="2"
-        @change="setRating(2)"
-        :checked="currentRating === 2"
-      />
-      <label
-        class="star-rating__ico fa fa-star-o fa-lg"
-        :for="'star-2-' + id"
-        title="Плохо"
-      ></label>
-
-      <input
-        class="star-rating__input"
-        :id="'star-1-' + id"
-        type="radio"
-        :name="'rating-' + id"
-        :value="1"
-        @change="setRating(1)"
-        :checked="currentRating === 1"
-      />
-      <label
-        class="star-rating__ico fa fa-star-o fa-lg"
-        :for="'star-1-' + id"
-        title="Ужасно"
-      ></label>
+      <template v-for="value in 5" :key="'star-' + value">
+        <input
+          class="star-rating__input"
+          :id="'star-' + value + '-' + id"
+          type="radio"
+          :name="'rating-' + id"
+          :value="value"
+          @change="setRating(value)"
+          :checked="currentRating === value"
+        />
+        <label
+          class="star-rating__ico fa fa-star-o fa-lg"
+          :for="'star-' + value + '-' + id"
+          :title="getTitle(value)"
+        ></label>
+      </template>
     </div>
   </div>
 </template>
@@ -98,14 +40,20 @@ export default {
       emit("update:rating", value);
     };
 
+    const getTitle = (value) => {
+      const titles = ["Ужасно", "Плохо", "Удовлетворительно", "Хорошо", "Отлично"];
+      return titles[value - 1] || "";
+    };
+
     return {
       setRating,
+      getTitle,
     };
   },
 };
 </script>
 
-<style scoped>
+<style>
 .star-rating {
   font-size: 0;
 }

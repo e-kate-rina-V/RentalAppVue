@@ -284,9 +284,15 @@ export default {
         formData.value.password_confirmation
       );
 
-      if (nameError) validationErrors.value.name = [nameError];
-      if (emailError) validationErrors.value.email = [emailError];
-      if (passwordError) validationErrors.value.password_confirmation = [passwordError];
+      if (nameError) {
+        validationErrors.value.name = [nameError];
+      }
+      if (emailError) {
+        validationErrors.value.email = [emailError];
+      }
+      if (passwordError) {
+        validationErrors.value.password_confirmation = [passwordError];
+      }
 
       if (Object.keys(validationErrors.value).length > 0) {
         return;
