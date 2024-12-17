@@ -356,14 +356,21 @@ export default {
         const user = response.user;
 
         const userRole = user.role;
-        if (userRole === "admin") {
-          router.push("/");
-        } else if (userRole === "renter") {
-          router.push("/renter");
-        } else if (userRole === "landlord") {
-          router.push("/landlord");
+
+        console.log("Login API Response:", response);
+
+        if (response && response.role) {
+          const userRole = response.role;
+
+          if (userRole === "renter") {
+            router.push("/renter");
+          } else if (userRole === "landlord") {
+            router.push("/landlord");
+          } else {
+            console.error("Unexpected user role:", userRole);
+          }
         } else {
-          validationErrors.value.auth = ["Unexpected user role"];
+          console.error("Role not found in the response:", response);
         }
 
         closeModal();

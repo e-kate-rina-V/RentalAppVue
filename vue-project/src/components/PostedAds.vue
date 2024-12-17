@@ -81,7 +81,7 @@ export default {
         const result = await fetchUserAds(page, ads.value.per_page);
         ads.value = result;
       } catch (error) {
-        errorMessage.value = "Ошибка при загрузке оголошень.";
+        errorMessage.value = "Помилка при завантаженні оголошень.";
         console.error(error);
       } finally {
         isLoading.value = false;

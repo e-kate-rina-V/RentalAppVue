@@ -128,8 +128,8 @@
             >
               <img
                 class="conven-img"
-                src="../assets/img/cutlery_icon.png"
-                alt="cutlery_icon"
+                src="../assets/img/kitchen_icon.png"
+                alt="kitchen_icon"
               />
               <p>Кухня</p>
             </button>
@@ -148,7 +148,7 @@
               :class="{ active: isConvenSelected('pets') }"
               @click="toggleConven('pets')"
             >
-              <img class="conven-img" src="../assets/img/paw_icon.png" alt="paw_icon" />
+              <img class="conven-img" src="../assets/img/pets_icon.png" alt="pets_icon" />
               <p>Можна з тваринами</p>
             </button>
             <button
@@ -159,8 +159,8 @@
             >
               <img
                 class="conven-img"
-                src="../assets/img/laptop_icon.png"
-                alt="laptop_icon"
+                src="../assets/img/work_place_icon.png"
+                alt="work_place_icon"
               />
               <p>Робоче місце</p>
             </button>
@@ -186,8 +186,8 @@
             >
               <img
                 class="conven-img"
-                src="../assets/img/snowflake_icon.png"
-                alt="snowflake_icon"
+                src="../assets/img/conditioner_icon.png"
+                alt="conditioner_icon"
               />
               <p>Кондиціонування</p>
             </button>

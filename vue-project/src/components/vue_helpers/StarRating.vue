@@ -4,17 +4,17 @@
       <template v-for="value in 5" :key="'star-' + value">
         <input
           class="star-rating__input"
-          :id="'star-' + value + '-' + id"
+          :id="'star-' + (6 - value) + '-' + id"
           type="radio"
           :name="'rating-' + id"
-          :value="value"
-          @change="setRating(value)"
-          :checked="currentRating === value"
+          :value="6 - value"
+          @change="setRating(6 - value)"
+          :checked="modelValue === 6 - value"
         />
         <label
           class="star-rating__ico fa fa-star-o fa-lg"
-          :for="'star-' + value + '-' + id"
-          :title="getTitle(value)"
+          :for="'star-' + (6 - value) + '-' + id"
+          :title="getTitle(6 - value)"
         ></label>
       </template>
     </div>
@@ -29,15 +29,15 @@ export default {
       type: String,
       required: true,
     },
-    currentRating: {
+    modelValue: {
       type: Number,
       default: 0,
     },
   },
-  emits: ["update:rating"],
+  emits: ["update:modelValue"],
   setup(props, { emit }) {
     const setRating = (value) => {
-      emit("update:rating", value);
+      emit("update:modelValue", value);
     };
 
     const getTitle = (value) => {
@@ -61,14 +61,12 @@ export default {
 .star-rating__wrap {
   display: inline-block;
   font-size: 1rem;
-  direction: rtl;
 }
 
 .star-rating__ico {
   padding-left: 2px;
   cursor: pointer;
   color: #ffb300;
-  direction: ltr;
 }
 
 .star-rating__input {

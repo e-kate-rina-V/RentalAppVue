@@ -17,35 +17,19 @@
           <div class="row row-cols-2">
             <div>
               <label>Чистота</label>
-              <StarRating
-                :id="'cleanliness'"
-                :currentRating="ratings.cleanliness"
-                @update:rating="updateRating('cleanliness', $event)"
-              />
+              <StarRating :id="'cleanliness'" v-model="ratings.cleanliness" />
             </div>
             <div>
               <label>Робота персоналу</label>
-              <StarRating
-                :id="'staffWork'"
-                :currentRating="ratings.staffWork"
-                @update:rating="updateRating('staffWork', $event)"
-              />
+              <StarRating :id="'staffWork'" v-model="ratings.staffWork" />
             </div>
             <div>
               <label>Розташування</label>
-              <StarRating
-                :id="'location'"
-                :currentRating="ratings.location"
-                @update:rating="updateRating('location', $event)"
-              />
+              <StarRating :id="'location'" v-model="ratings.location" />
             </div>
             <div>
               <label>Співвідношення ціна/якість</label>
-              <StarRating
-                :id="'valueForMoney'"
-                :currentRating="ratings.valueForMoney"
-                @update:rating="updateRating('valueForMoney', $event)"
-              />
+              <StarRating :id="'valueForMoney'" v-model="ratings.valueForMoney" />
             </div>
           </div>
 
@@ -138,6 +122,7 @@ export default {
       );
       const numberOfRatings = Object.values(ratings).filter((rating) => rating > 0)
         .length;
+
       return numberOfRatings > 0 ? (totalRatings / numberOfRatings).toFixed(1) : "0.0";
     });
 
