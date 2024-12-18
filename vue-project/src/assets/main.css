@@ -160,7 +160,6 @@ main {
   justify-content: flex-start;
   align-items: center;
   margin-left: 5%;
-  margin-bottom: 10%;
 }
 
 #sort-icon,
@@ -541,22 +540,20 @@ main {
   margin-left: 40%;
 }
 
+#ad-details-load {
+  margin-top: -30%;
+}
+
 #main-ad-details {
   display: grid;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 40%;
-}
-
-#carousel-container {
-  position: relative;
+  margin-top: 60%;
 }
 
 #reserv-btn {
-  display: block;
-  position: absolute;
-  margin-left: 10%;
-  width: 18%;
+  padding-left: 100%;
+  width: 250%;
   gap: 18px;
 }
 
@@ -582,16 +579,18 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+  align-items: center;
+  justify-content: start;
 }
 
 .conven-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-wrap: nowrap;
-  height: 1px;
-  padding: 80px;
+  justify-content: start;
+  width: 150px;
+  height: 130px;
+  padding: 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -610,6 +609,13 @@ main {
   height: 50px;
   margin-bottom: 8px;
   object-fit: contain;
+}
+
+.conven-card p {
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .modal-overlay {

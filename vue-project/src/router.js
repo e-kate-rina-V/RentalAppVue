@@ -47,28 +47,4 @@ const router = createRouter({
     routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//     const user = JSON.parse(localStorage.getItem('user'));
-
-//     if (!user && (to.path === '/landlord' || to.path === '/renter')) {
-//         return next('/home');
-//     }
-
-//     if (to.path === '/landlord' && user?.role !== 'landlord') {
-//         return next('/home');
-//     }
-
-//     if (to.path === '/renter' && user?.role !== 'renter') {
-//         return next('/home');
-//     }
-
-//     if (to.path === '/home' && user) {
-//         if (user.role === 'landlord') return next('/landlord');
-//         if (user.role === 'renter') return next('/renter');
-//     }
-
-//     next();
-// });
-
-
 export default router;

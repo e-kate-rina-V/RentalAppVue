@@ -1,12 +1,23 @@
 import axios from "axios";
 
+const token = localStorage.getItem('auth_token');
+
 const api = axios.create({
-    baseURL:  import.meta.env.VITE_API_BASE_URL,
+    baseURL: import.meta.env.VITE_API_BASE_URL,  
     headers: {
         'Content-Type': 'application/json',
     },
     withCredentials: true,
 });
+
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('auth_token');  
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;  
+    }
+    return config;
+});
+
 
 export const registerUser = async (data) => {
     try {
@@ -29,6 +40,8 @@ export const registerUser = async (data) => {
 export const loginUser = async (data) => {
     try {
         const response = await api.post('login', data);
+        const token = response.data.token;  
+        localStorage.setItem('auth_token', token);  
         return response.data;
     } catch (error) {
         console.error('API Error:', error.response?.data || error.message || error);
@@ -67,6 +80,7 @@ export const registerAd = async (formData) => {
 };
 
 export const fetchUserAds = async (page = 1, perPage = 5) => {
+
     try {
         const response = await api.get(`/ads?page=${page}&per_page=${perPage}`);
         return response.data;
